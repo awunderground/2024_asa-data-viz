@@ -1,0 +1,77 @@
+---
+title: "Data Munging for Data Visualization"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+tribble(
+  ~Class, ~female_passengers, ~male_passengers,
+  "1st class", 144, 179,
+  "2nd class", 106, 171,
+  "3rd class", 216, 493
+) %>%
+  pivot_longer(
+    cols = c(male_passengers, female_passengers),
+    names_to = "Sex",
+    values_to = "n"
+  )
+
+```
+
+## Exercise 2
+
+```{r}
+tribble(
+  ~Class, ~`male passengers/female passengers`,
+  "1st class", "179|144",
+  "2nd class", "171|106",
+  "3rd class", "493|216"
+)  %>%
+  separate(
+    col = `male passengers/female passengers`,
+    into = c("male passengers", "female passengers")
+  ) %>%
+  pivot_longer(
+    cols = c(`male passengers`, `female passengers`),
+    names_to = "Sex",
+    values_to = "n"
+  )
+
+```
+
+## Exercise 3
+
+```{r}
+tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+) %>%
+  filter(Sex != "male passengers") %>%
+  mutate(Class = factor(Class,
+                        levels = c("3rd class", "2nd class", "1st class"))) %>%
+  ggplot(mapping = aes(x = n, y = Class)) +
+  geom_col()
+
+```

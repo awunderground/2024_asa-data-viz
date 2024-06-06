@@ -1,0 +1,92 @@
+---
+title: "Visualizing Big Data"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+    css: !expr here::here("www", "web_report.css")
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+
+```
+
+## Exercise 1
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 2
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 3
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 4
+
+```{r}
+library(GGally)
+
+penguins %>%
+  select(-island, -sex, -year) %>%
+  drop_na() %>%
+
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 5
+
+```{r}
+library(GGally)
+
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 6
+
+```{r}
+votes <- read_csv(here::here("data", "votes.csv"))
+
+# select the numeric variables
+votes_numeric <- votes %>%
+  select_if(is.numeric)
+
+# run PCA
+votes_pca <- prcomp(votes_numeric)
+
+# extract the principle components
+votes_pcs <- votes_pca %>%
+  .$x %>%
+  as_tibble()
+
+# combine the pcs to the names and parties
+votes_pcs <- bind_cols(
+  select(votes, name, party),
+  votes_pcs
+)
+
+summary(votes_pca)
+
+```
+
+```{r}
+# YOUR WORK GOES HERE
+
+```

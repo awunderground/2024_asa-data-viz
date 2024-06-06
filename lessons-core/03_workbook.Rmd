@@ -1,0 +1,88 @@
+---
+title: "Grammar of Graphics"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+tidy_anscombe <- 
+  anscombe %>%
+  # make the wide data too long
+  pivot_longer(
+    cols = everything(), 
+    names_to = "names", 
+    values_to = "value"
+  ) %>%
+  # split the axis and quartet id
+  mutate(
+    coord = str_sub(names, start = 1, end = 1),
+    quartet = str_sub(names, start = 2, end = 2) 
+  ) %>%
+  group_by(quartet, coord) %>%
+  mutate(id = row_number()) %>%
+  # make the data tidy
+  pivot_wider(id_cols = c(id, quartet), names_from = coord, values_from = value) %>%
+  ungroup() %>%
+  select(-id)
+
+## YOUR CODE GOES HERE
+
+```
+
+## Exercise 2
+
+```{r}
+titanic <- tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+)
+
+## YOUR CODE GOES HERE
+
+```
+
+## Exercise 3
+
+```{r}
+## YOUR CODE GOES HERE
+
+```
+
+## Exercise 4
+
+```{r}
+library(ggtext)
+
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 5
+
+```{r warning = FALSE}
+library(gghighlight)
+library(gapminder)
+
+# YOUR WORK GOES HERE
+
+```

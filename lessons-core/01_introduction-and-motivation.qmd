@@ -23,10 +23,10 @@ execute:
 
 * Synthetic data generation ([rstudio::conf(2022) talk about `library(tidysynthesis)`](https://www.youtube.com/watch?v=ai8QU5jJNIw&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=42))
 * Formal privacy/differential privacy evaluation
-    - ([code](https://github.com/UI-Research/formal-privacy-comp))  ([arXiv](https://arxiv.org/abs/2110.12055))
-    -
+    - A Feasibility Study of Differentially Private Summary Statistics and Regression Analyses with Evaluations on Administrative and Survey Data ([code](https://github.com/UI-Research/formal-privacy-comp))  ([JASA](https://www.tandfonline.com/doi/full/10.1080/01621459.2023.2270795))
+    - Benchmarking DP Linear Regression Methods for Statistical Inference ([Preprint](https://conference.nber.org/conf_papers/f194244.pdf))
 - Projects that iterate with R Markdown/Quarto
-    - [Mobility Metrics data pages]()
+    - [Mobility Metrics data pages](https://upward-mobility.urban.org/measuring-upward-mobility-counties-and-cities-across-us)
     - [State Fiscal briefs](https://www.urban.org/policy-centers/cross-center-initiatives/state-and-local-finance-initiative/projects/state-fiscal-briefs)
 * Manage the Urban Institute ggplot2 theme ([Examples](https://urbaninstitute.github.io/r-at-urban/graphics-guide.html)) ([Code](https://github.com/UrbanInstitute/urbnthemes))
 * [Urban Institute R Users Group](https://urbaninstitute.github.io/r-at-urban/)

@@ -1,0 +1,273 @@
+---
+title: "Visualizing Time Series in R"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(here)
+
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+dates <- tribble(
+  ~date,
+  "12/01/1987",
+  "12/02/1987",
+  "12/03/1987"
+)
+
+dates %>%
+  mutate(date = mdy(date))
+
+```
+
+## Exercise 2
+
+```{r}
+# https://fred.stlouisfed.org/series/UNRATE
+# accessed on 2021-11-19
+u3_rate <- read_csv(here("data", "UNRATE.csv"))
+
+# https://fred.stlouisfed.org/series/U6RATE
+# accessed on 2021-11-19
+u6_rate <- read_csv(here("data", "U6RATE.csv"))
+
+# combine the U3 and U6 data
+rates <- left_join(u3_rate, u6_rate, by = "DATE")
+
+rates %>%
+  ggplot() +
+  geom_line(aes(DATE, UNRATE), color = "blue") +
+  geom_line(aes(DATE, U6RATE), color = "red")
+
+```
+
+## Exercise 3
+
+```{r}
+# lower_limit: https://fred.stlouisfed.org/series/DFEDTARL
+# upper_limit: https://fred.stlouisfed.org/series/DFEDTARU
+# downloaded from FRED on 2022-01-08
+
+fed_funds_rate <- read_csv(
+  "date, upper_limit, lower_limit
+   2014-01-01,0.0025,0
+   2015-12-16,0.0050,0.0025
+   2016-12-14,0.0075,0.005
+   2017-03-16,0.0100,0.0075
+   2017-06-15,0.0125,0.01
+   2017-12-14,0.0150,0.0125
+   2018-03-22,0.0175,0.015
+   2018-06-14,0.0200,0.0175
+   2018-09-27,0.0225,0.02
+   2018-12-20,0.025,0.0225
+   2019-08-01,0.0225,0.02
+   2019-09-19,0.02,0.0175
+   2019-10-31,0.0175,0.015
+   2020-03-03,0.0125,0.01
+   2020-03-15,0.0025,0
+   2022-03-16,0.005,0.0025
+   2022-05-04,0.01,0.0075
+   2022-06-15,0.0175,0.015
+   2022-07-27,0.025,0.0225
+   2022-09-21,0.0325,0.03
+   2022-11-02,0.04,0.0375
+   2022-12-14,0.045,0.0425
+   2023-01-08,0.045,0.0425"
+)
+
+
+fed_funds_rate %>%
+  pivot_longer(
+    cols = -date, 
+    names_to = "bound", 
+    values_to = "rate"
+  ) %>%
+  ggplot(aes(x = date, y = rate, color = bound)) +
+  geom_step()
+
+```
+
+## Exercise 4
+
+```{r}
+# https://fredhelp.stlouisfed.org/fred/data/understanding-the-data/recession-bars/
+# downloaded from FRED on 2021-11-19
+
+recessions <- read_csv(
+  "Peak, Trough
+   1857-06-01, 1858-12-01
+   1860-10-01, 1861-06-01
+   1865-04-01, 1867-12-01
+   1869-06-01, 1870-12-01
+   1873-10-01, 1879-03-01
+   1882-03-01, 1885-05-01
+   1887-03-01, 1888-04-01
+   1890-07-01, 1891-05-01
+   1893-01-01, 1894-06-01
+   1895-12-01, 1897-06-01
+   1899-06-01, 1900-12-01
+   1902-09-01, 1904-08-01
+   1907-05-01, 1908-06-01
+   1910-01-01, 1912-01-01
+   1913-01-01, 1914-12-01
+   1918-08-01, 1919-03-01
+   1920-01-01, 1921-07-01
+   1923-05-01, 1924-07-01
+   1926-10-01, 1927-11-01
+   1929-08-01, 1933-03-01
+   1937-05-01, 1938-06-01
+   1945-02-01, 1945-10-01
+   1948-11-01, 1949-10-01
+   1953-07-01, 1954-05-01
+   1957-08-01, 1958-04-01
+   1960-04-01, 1961-02-01
+   1969-12-01, 1970-11-01
+   1973-11-01, 1975-03-01
+   1980-01-01, 1980-07-01
+   1981-07-01, 1982-11-01
+   1990-07-01, 1991-03-01
+   2001-03-01, 2001-11-01
+   2007-12-01, 2009-06-01
+   2020-02-01, 2020-04-01")
+
+rates %>%
+  mutate(UNRATE = UNRATE / 100) %>%
+  ggplot() +
+  geom_line(aes(DATE, UNRATE)) +
+  geom_rect(
+    data = filter(recessions, Peak >= "1950-01-01"),
+    aes(xmin = Peak, xmax = Trough, ymin = 0, ymax = 0.2), 
+    alpha = 0.3
+  ) + 
+  scale_y_continuous(
+    limits = c(0, NA),
+    labels = scales::percent_format(accuracy = 1)
+  ) +
+  labs(
+    title = "Unemployment Reached Record Highs After COVID-19 Emerged",
+    subtitle = "",
+    x = "Date",
+    y = "Unemployment Rate",
+    caption = "Source: Bureau of Labor Statistics data accessed through FRED"
+  ) +
+  annotate(geom = "text", x = date("2020-01-01"), y = 0.17, label = "Covid-19\nPandemic")
+
+```
+
+## Exercise 5
+
+```{r}
+rates %>%
+  mutate(UNRATE = UNRATE / 100) %>%
+  ggplot() +
+  geom_line(aes(DATE, UNRATE)) +
+  geom_rect(
+    data = filter(recessions, Peak >= "1950-01-01"),
+    aes(xmin = Peak, xmax = Trough, ymin = 0, ymax = 0.2), alpha = 0.3
+  ) + 
+  scale_y_continuous(
+    limits = c(0, NA),
+    labels = scales::percent_format(accuracy = 1)
+  ) +
+  labs(
+    title = "Unemployment Reached Record Highs After COVID-19 Emerged",
+    subtitle = "",
+    x = "Date",
+    y = "Unemployment Rate",
+    caption = "Source: Bureau of Labor Statistics data accessed through FRED"
+  ) +
+  annotate(geom = "text", x = date("2020-03-01"), y = 0.17, label = "COVID-19\nRecession")
+
+```
+
+## Exercise 6
+
+```{r}
+# https://fred.stlouisfed.org/series/PAYEMS
+# accessed on 2021-11-19
+
+payrolls <- read_csv(here("day03", "data", "PAYEMS.csv")) %>%
+  mutate(PAYEMS = PAYEMS / 1000)
+
+# filter to pre-pandemic data for model estimation
+payrolls_pre_pandemic <- payrolls %>%
+  filter(DATE < "2020-03-31")
+
+# fit a simple linear regression model with DATE as the predictor
+pre_pandemic_trend <- lm(PAYEMS ~ DATE, data = payrolls_pre_pandemic)
+
+# extract coefficients
+pre_pandemic_coefs <- coef(pre_pandemic_trend)
+
+# filter to recent data for model estimation
+payrolls_2021 <- payrolls %>%
+  filter(DATE >= "2021-01-01")
+
+# fit a simple linear regression model with DATE as the predictor
+trend_2021 <- lm(PAYEMS ~ DATE, data = payrolls_2021)
+
+# extract coefficients
+coefs_2021 <- coef(trend_2021)
+
+# plot
+ggplot() +
+  geom_line(
+    data = payrolls,
+    aes(DATE, PAYEMS)
+  ) +
+  geom_abline(
+    intercept = pre_pandemic_coefs["(Intercept)"], 
+    slope = pre_pandemic_coefs["DATE"],
+    linetype = "dashed"
+  ) +
+  geom_abline(
+    intercept = coefs_2021["(Intercept)"], 
+    slope = coefs_2021["DATE"],
+    linetype = "dashed"
+  ) +
+  scale_x_date(limits = c(as_date(NA), as_date("2025-01-01"))) +
+  scale_y_continuous(limits = c(NA, 160))
+
+```
+
+## Exercise 7
+
+```{r}
+remote <- read_csv(here("day03", "data", "remote-work.csv"))
+
+labels <- remote %>%
+  slice_max(date) %>%
+  mutate(date = date + months(6))
+
+remote %>%
+  ggplot(aes(x = date, y = remote_prop, color = major_occ)) +
+  geom_line() +
+  geom_point() +
+  geom_text(
+    data = labels,
+    aes(label = major_occ)
+  ) +
+  scale_x_date(limits = c(as_date(NA), as_date("2023-06-01"))) +
+  labs(
+    title = "Remote Work in the Pandemic, by Occupation",
+    subtitle = "Persons teleworking because of the pandemic, as share of employed",
+    caption = "Source: Bureau of Labor Statistics (via IPUMS)"
+  ) +
+  guides(color = "none")
+
+```
+

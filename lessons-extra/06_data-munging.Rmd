@@ -1,0 +1,206 @@
+---
+title: "Data Munging for Data Visualization"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+    css: !expr here::here("www", "web_report.css")
+editor_options:
+  chunk_output_type: console
+---
+
+```{css echo=FALSE}
+h1 {
+    font-size: 34px;
+    color: #337AB7;
+}
+p {
+    margin: 20px 0 20px;
+}
+```
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+
+```
+
+## Import Packages and Functions
+
+* `filter()` - drop cases based on logical conditions
+* `mutate()` - add new variables are transform existing variables
+* `pivot_wider()` - make data wider
+* `pivot_longer()` - make data longer
+* `separate()` - split a character variable into multiple columns based on a delimiter
+
+## Tidy Data
+
+This data comes from `library(tidyr)` and these examples largely come from chapter 12 in [R for Data Science](https://r4ds.had.co.nz/tidy-data.html) by Hadley Wickham and Garrett Grolemund.
+
+> table1, table2, table3, table4a, table4b, and table5 all display the number of TB cases documented by the World Health Organization in Afghanistan, Brazil, and China between 1999 and 2000. 
+
+The following table, `table1` is tidy because
+
+1. Each variable has its own column
+2. Each observation has its own row
+3. Each value has its own cell
+
+```{r}
+table1
+
+```
+
+## Untidy table2 {.tabset}
+
+### Untidy
+
+**Why aren't the data tidy?**
+
+```{r}
+table2
+
+```
+
+### Cleaned
+
+**Each observation was spread across two rows!**
+
+```{r}
+table2 %>%
+  pivot_wider(names_from = type, values_from = count)
+
+```
+
+## Untidy table3 {.tabset}
+
+### Untidy
+
+**Why aren't the data tidy?**
+
+```{r}
+table3
+
+```
+
+### Cleaned
+
+**The `rate` column had two variables!**
+
+```{r}
+table3 %>%
+  separate(rate, into = c("cases", "population")) %>%
+  mutate(
+    cases = as.numeric(cases),
+    population = as.numeric(population)
+  )
+
+```
+
+## Untidy table4 {.tabset}
+
+### Untidy
+
+**Why aren't the data tidy?**
+
+```{r}
+table4a
+table4b
+
+```
+
+### Cleaned
+
+**Each table had variables in the column names and the data were spread across two tables**
+
+```{r}
+# fix table4a
+table4a_fixed <- table4a %>%
+  pivot_longer(
+    cols = c(`1999`, `2000`), 
+    names_to = "year", 
+    values_to = "cases"
+  )
+
+# fix table4b
+table4b_fixed <- table4b %>%
+  pivot_longer(
+    cols = c(`1999`, `2000`), 
+    names_to = "year", 
+    values_to = "population"
+  )
+
+# join the two tables into one tidy table
+left_join(
+  table4a_fixed, 
+  table4b_fixed, 
+  by = c("country", "year")
+)
+
+```
+
+## Titanic Data
+
+Consider the Titanic data set from the 3D plots example. 
+
+```{r eval = FALSE}
+tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+)
+
+
+```
+
+### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+
+Tidy the following data:
+
+```{r eval = FALSE}
+tribble(
+  ~Class, ~female_passengers, ~male_passengers,
+  "1st class", 144, 179,
+  "2nd class", 106, 171,
+  "3rd class", 216, 493
+)
+
+```
+
+### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+
+Tidy the following data:
+
+```{r eval = FALSE}
+tribble(
+  ~Class, ~`male passengers/female passengers`,
+  "1st class", "179|144",
+  "2nd class", "171|106",
+  "3rd class", "493|216",
+)
+
+```
+
+### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+
+Suppose we want to create a column chart with only female passengers. Furthermore, we want `n` on the x-axis and we want `Class` on the y-axis with the levels going from 1st to 3rd from top to bottom.
+
+<font color="#55b748">Step 1:</font> Use `filter()` to drop male passengers. 
+
+<font color="#55b748">Step 2:</font> Create a column chart with `n` on the x-axis and `Class` on the y-axis. Pipe (`%>%`) the data into `ggplot()`. 
+
+<font color="#55b748">Step 3:</font> After the `filter()`, add the following:
+
+```
+  mutate(Class = factor(Class, levels = c("3rd class", "2nd class", "1st class"))) %>%
+
+```
+
+## Additional tools
+
+* `library(stringr)` has powerful tools for dealing with text strings.
+* `library(lubridate)` has powerful tools for dealing with time and dates.

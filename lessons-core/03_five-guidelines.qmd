@@ -1,0 +1,365 @@
+---
+title: "Jon Schwabish's Five Guidelines in R"
+subtitle: "Introduction to the R Programming Language"
+author: "Aaron R. Williams"
+format: 
+  html: 
+    code-line-numbers: true
+    embed-resources: true
+execute: 
+  warning: false
+  message: false
+---
+
+```{css echo=FALSE}
+h1 {
+    font-size: 34px;
+    color: #1696d2;
+}
+p {
+    margin: 20px 0 20px;
+}
+```
+
+## Better Data Visualizations
+
+[Jon Schwabish](https://policyviz.com/) wrote a book called [Better Data Visualizations](https://policyviz.com/pv_books/better-data-visualizations-a-guide-for-scholars-researchers-and-wonks/). Chapter two includes five guidelines for better data visualizations. We will work through the five guidelines with examples in `library(ggplot2)`. Jon has taught me a ton about data viz and [I taught Jon how to use R](https://urban-institute.medium.com/learning-r-a-conversation-982130d75104). 
+
+-----
+
+# Guideline 1: Show the Data
+
+> "Your reader can only grasp your point, argument, or story if they see the data."
+
+Schwabish focuses on communications, but this rule holds true for analysis too. Let's consider the classic example of [Anscombe's quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet). 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+
+<font color="#55b748">Step 1:</font> Copy-and-paste the following code to get the Anscombe's quartet data: 
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_minimal())
+
+tidy_anscombe <- 
+  anscombe %>%
+  # make the wide data too long
+  pivot_longer(
+    cols = everything(), 
+    names_to = "names", 
+    values_to = "value"
+  ) %>%
+  # split the axis and quartet id
+  mutate(
+    coord = str_sub(names, start = 1, end = 1),
+    quartet = str_sub(names, start = 2, end = 2) 
+  ) %>%
+  group_by(quartet, coord) %>%
+  mutate(id = row_number()) %>%
+  # make the data tidy
+  pivot_wider(id_cols = c(id, quartet), names_from = coord, values_from = value) %>%
+  ungroup() %>%
+  select(-id)
+  
+```
+
+<font color="#55b748">Step 2:</font> Create a data visualization with `x = x`, `y = y`, and `geom_smooth(method = "lm", se = FALSE)`. The plot should have one upward sloping line. 
+
+<font color="#55b748">Step 3:</font> Facet wrap the plot based on `quartet`. The plot should have four panels with lines with identical slopes and intercepts. 
+
+<font color="#55b748">Step 4:</font> Add `geom_point()`.
+
+The four data sets have identical mean and sample variance for x, and nearly identical mean of y, sample variance of y, correlation between x and y, regression line, and coefficient of determination. 
+
+There is value in exploring and showing the data instead of relying exclusively on summaries of the data! This generalizes to a bunch of use cases and demonstrates the value of layers. For instance, a box and whisker plot is useful for highlighting important values in a univariate distribution and can be layered on top of a univariate dot plot. 
+
+-----
+
+Consider an even more dramatic example by Justin Matejka and George Fitzmaurice based on the Datasaurus by Alberto Cairo. ([source](https://www.autodesk.com/research/publications/same-stats-different-graphs)) Again, these data sets have identical mean and sample variance for x, and nearly identical mean of y, sample variance of y, correlation between x and y, regression line, and coefficient of determination. 
+
+```{r}
+read_tsv(here::here("data", "DatasaurusDozen.tsv")) %>%
+  ggplot(aes(x, y)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Similar Summaries Do Not Mean Similar Data!") +
+  facet_wrap(~dataset)
+
+```
+
+-----
+
+# Guideline 2: Reduce the Clutter
+
+> "The use of unnecessary visual elements distracts your reader from the central idea and clutters the page."
+
+A few things to avoid:
+
+* heavy tick marks and grid lines
+* unnecessary 3D
+* excessive text
+
+Consider this image from Claus Wilke's [Fundamental's of Data Visualization](https://clauswilke.com/dataviz/). 
+
+```{r}
+#| echo: false
+knitr::include_graphics(here::here("images", "titanic-3d-1.png"))
+
+```
+
+*How many passengers are in first class? How many male passengers are in 3rd class?* Let's recreate this plot without the gratuitous 3D. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+
+<font color="#55b748">Step 1:</font> Copy-and-paste the following data into your exercise document. 
+
+```{r}
+#| eval: false
+titanic <- tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+)
+
+```
+
+<font color="#55b748">Step 2:</font> Recreate the 3D plot in 2D. 
+
+-----
+
+# Guideline 3: Integrate the Graphics and Text
+
+1. Remove legends when possible and label data directly
+2. Write *active* titles like newspaper headlines
+3. Add explainers
+
+`labs()` adds `title`, `subtitle`, `caption`, and `tag` to ggplot2 objects. It can also be used to overwrite `x`, `y`, and legend titles. Use `NULL` to remove a label entirely (not `""`). `ggtitle()`, `xlab()`, and `ylab()` are alternatives, but I prefer to exclusively use `labs()` for clarity. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+
+<font color="#55b748">Step 1:</font> Duplicate the titanic example from above. 
+
+<font color="#55b748">Step 2:</font> Add a newspaper like headline with `labs(title = "")`. 
+
+<font color="#55b748">Step 3:</font> Add the sources of the data with `caption = "Data from library(titanic)"` in `labs()`. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+
+[`library(ggtext)`](https://github.com/wilkelab/ggtext) is a useful library for extending text functionality in ggplot2. 
+
+<font color="#55b748">Step 1:</font> Install `ggtext` with `install.packages("ggtext")` and load the package with `library(ggtext)`.
+
+<font color="#55b748">Step 2:</font> Duplicate the titanic example from above. 
+
+<font color="#55b748">Step 3:</font> We want to compare the sexes within classes. Add `position = "dodge"` inside `geom_col()`. 
+
+<font color="#55b748">Step 4:</font> Add the following code:
+
+```{r}
+#| eval: false
+  theme(plot.title = element_markdown())
+```
+
+<font color="#55b748">Step 5:</font> Add the following code:
+
+```{r}
+#| eval: false
+  labs(
+    title = "More 
+    <span style='color:#00BFC4;'>male passengers</span> died than 
+    <span style='color:#F8766D;'>female passengers</span> in all three classes",
+    x = NULL,
+    y = NULL
+  )
+```
+
+<font color="#55b748">Step 6:</font> Add `guides(fill = "none")` to remove the legend. 
+
+**Tip:** I found [this solution](https://stackoverflow.com/questions/49735290/ggplot2-color-individual-words-in-title-to-match-colors-of-groups) by Googling "add color in ggplot2 title".
+
+`annotate()`, `geom_text()`, and `geom_text_repel()` from `library(ggrepel)` are useful for labeling data directly and adding explainers. Consider directly labeling bars instead of using y-axes, labeling lines instead of using legends for colors, and directly labeling points. Also, consider how an explainer or annotation layer can enhance a data visualization. [This example](https://questionsindataviz.com/2018/01/06/is-white-space-always-your-friend/) by Neil Richards about the name Neil is a great demonstration of explainers.
+
+For a publication, we could continue refining this exercise. Here is an example:
+
+```{r}
+#| eval: false
+library(ggtext)
+
+tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+) %>%
+  ggplot(aes(Class, n, fill = Sex)) +
+  geom_col(position = "dodge") +
+  geom_text(
+    aes(label = n),
+    position = position_dodge(width = 0.9),
+    vjust = -1
+  ) +
+  scale_y_continuous(limits = c(0, 550)) +
+  labs(
+    title = "More 
+    <span style='color:#00BFC4;'>male passengers</span> died than 
+    <span style='color:#F8766D;'>female passengers</span> in all three classes",
+    x = NULL,
+    y = NULL
+  ) +
+  theme(
+    panel.grid = element_line(color = "white"),
+    plot.title = element_markdown(),
+    axis.text.y = element_blank()
+  ) +
+  guides(fill = "none")
+
+```
+
+-----
+
+# Guideline 4: Avoid the Spaghetti Chart
+
+>"Sometimes we face the challenge of including lots of data in a single graph but we don't need to try to pack everything into a single graph. 
+
+Faceting or using small multiples is a useful way to declutter a busy data visualization. We've already encountered faceting multiple times because it is so natural in ggplot2. With effective small multiples, if a reader understand how to read one small multiple then they should understand how to read all of the multiples. Two tips:
+
+1. Arrange the small multiples in a logical order
+2. Use the same layout, size, font, and color in each small multiple
+
+<br>
+
+Consider an example where we are writing about the relationship between per capita GDP and life expectancy over time in the United States and two comparison countries. By default, the facets will show up in alpha-numeric order (Canada, Mexico, United States). What if we want to change the order so the United States is first and the two comparison countries come later?
+
+To do this, we just need to turn `country` into a factor variable with `mutate()` and `factor()`. 
+
+```{r}
+library(gapminder)
+
+countries <- c("United States", "Mexico", "Canada")
+
+gapminder %>%
+  filter(country %in% countries) %>%
+  mutate(country = factor(country, levels = countries)) %>%
+  ggplot(aes(gdpPercap, lifeExp, color = country)) +
+  geom_path(color = "grey") +
+  geom_point() +
+  scale_x_continuous(
+    limits = c(0, 50000),
+    breaks = c(0, 20000, 40000), 
+    labels = scales::dollar
+  ) + 
+  facet_wrap(~ country) +
+  labs(
+    title = "The United States has Made Less Progress in Life Expectancy,\nEven as it has Gotten Richer", 
+    x = "Per capita GDP",
+    y = "Life Expectancy",
+    caption = "gapminder data from 1952-2007"
+  ) +
+  guides(color = "none")
+
+```
+
+Futher, we can label the first and last years but only in the first facet. 
+
+```{r}
+library(gapminder)
+library(ggrepel)
+
+years <- c(1952, 2007)
+countries <- c("United States", "Mexico", "Canada")
+
+gapminder %>%
+  filter(country %in% countries) %>%
+  mutate(country = factor(country, levels = countries)) %>%
+  mutate(
+    year = if_else(
+      condition = country == "United States" & year %in% years, 
+      true = year,
+      false = NA_integer_
+    )
+  ) %>%
+  ggplot(aes(gdpPercap, lifeExp, color = country)) +
+  geom_path(color = "grey") +
+  geom_point() +
+  geom_text(aes(label = year, y = lifeExp - 2), color = "black") +
+  scale_x_continuous(
+    limits = c(0, 50000),
+    breaks = c(0, 20000, 40000), 
+    labels = scales::dollar
+  ) + 
+  facet_wrap(~ country) +
+  labs(
+    title = "The United States has Made Less Progress in Life Expectancy,\nEven as it has Gotten Richer", 
+    x = "Per capita GDP",
+    y = "Life Expectancy",
+    caption = "gapminder data from 1952-2007"
+  ) +
+  guides(color = "none")
+
+```
+-----
+
+# Guideline 5: Start with Gray
+
+>"Whenever you make a graph, start with all gray data elements. By doing so, you force yourself to be purposeful and strategic in your use of color, labels, and other elements."
+
+[`library(gghighlight)`](https://cran.r-project.org/web/packages/gghighlight/vignettes/gghighlight.html) complements this idea of starting with gray. Let's consider an example using the Gapminder data.
+
+-----
+
+### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+
+<font color="#55b748">Step 1:</font> Install and load the `gghighlight` package and `gapminder` package.
+
+<font color="#55b748">Step 2:</font> Copy-and-paste the following code to create a data frame with the cumulative change in per-capita GDP in European countries:
+
+```{r}
+#| eval: false
+data <- gapminder %>%
+  filter(continent %in% c("Europe")) %>%
+  group_by(country) %>%
+  mutate(pcgdp_change = ifelse(year == 1952, 0, gdpPercap - lag(gdpPercap))) %>%
+  mutate(pcgdp_change = cumsum(pcgdp_change))
+  
+```
+
+<font color="#55b748">Step 3:</font> Create a line plot with `x = year`, `y = pcgdp_change`, `group = country`, and `geom_line()`. 
+
+<font color="#55b748">Step 4:</font> Add the following code to clean up the x-axis and y-axis.
+
+```{r}
+#| eval: false
+  scale_x_continuous(
+    expand = expansion(mult = c(0.002, 0)),
+    breaks = c(seq(1950, 2010, 10)),
+    limits = c(1950, 2010)
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.002)),
+    breaks = 0:8 * 5000,
+    labels = scales::dollar,
+    limits = c(0, 40000)
+  ) +
+  labs(
+    x = "Year",
+    y = "Change in per-capita GDP (US dollars)"
+  )
+```
+
+<font color="#55b748">Step 5:</font> Suppose we want to highlight the two best-performing counties. We could add a new variable and tinker with the colors or we can use `library(gghighlight)`. Switch `group` to `color` in you existing code and add `gghighlight(max(pcgdp_change) > 35000)`.

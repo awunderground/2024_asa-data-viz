@@ -1,0 +1,65 @@
+---
+title: "Where to Go From Here!"
+subtitle: "Introduction to the R Programming Language"
+author: "Aaron R. Williams"
+format: 
+  html: 
+    code-line-numbers: true
+    self-contained: true
+    toc: true
+execute: 
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Publications
+
+* [R for Data Science](https://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund
+* [ggplot2: elegant graphics for data analysis](https://ggplot2-book.org/) by Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen
+* [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/) by Claus O. Wilke
+* [Better Data Visualizations: A Guide for Scholars, Researchers, and Wonks](https://policyviz.com/pv_books/better-data-visualizations-a-guide-for-scholars-researchers-and-wonks/) by Jon Schwabish
+* [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) by Yihui Xie, J. J. Allaire, Garrett Grolemund
+* [fivethirtyeight best and weirdest charts](https://fivethirtyeight.com/features/our-51-best-and-weirdest-charts-of-2021/)
+
+## People and Places
+
+* [Yihui Xie](https://yihui.org/en/about/)
+* [Mona Chalabi](https://monachalabi.com/)
+* [Data@Urban](https://urban-institute.medium.com/)
+* [RStudio education](https://education.rstudio.com/)
+
+## Tidy Tuesday
+
+[GitHub](https://github.com/rfordatascience/tidytuesday)
+
+Check out `#TidyTuesday` on Twitter to follow the submissions
+
+> A weekly data project aimed at the R ecosystem. As this project was borne out of the R4DS Online Learning Community and the R for Data Science textbook, an emphasis was placed on understanding how to summarize and arrange data to make meaningful charts with ggplot2, tidyr, dplyr, and other tools in the tidyverse ecosystem. However, any code-based methodology is welcome - just please remember to share the code used to generate the results.
+
+David Robinson, a great data analyst and R package developer, often records [live videos](https://www.youtube.com/user/safe4democracy) where he talks his way through a #TidyTuesday event. 
+
+## Getting help
+
+### Googling
+
+When Googling for R or data science help, set the search range to the last year or less to avoid out-of-date solutions and to focus on up-to-date practices. The search window can be set by clicking Tools after a Google search. 
+
+### Stack Overflow
+
+[Stack Overflow](https://stackoverflow.com/) contains numerous solutions. If a problem is particularly perplexing, it is simple to submit questions. Exercise caution when submitting questions because the Stack Overflow community has strict norms about questions and loose norms about respecting novices.
+
+### RStudio community
+
+[RStudio Community](https://community.rstudio.com/) is a new forum for R Users. It has a smaller back catalog than Stack Overflow but users are friendlier than on Stack Overflow.
+
+### CRAN task views
+
+[CRAN task views](https://cran.r-project.org/web/views/) contains thorough introductions to packages and techniques organized by subject matter. The Econometrics, Reproducible Research, and and Social Sciences task views are good starting places.
+
+### Twitter
+
+Twitter is mostly bad. But the #rstats hashtag and #rstats community are mostly good. They are also generally inclusive and civil. In particular, open sources developers like Hadley Wickham (@hadleywickham) and Jenny Bryan (@JennyBryan) are active.
+
+I am somewhat happy on Twitter at @awunderground and I am always willing to help with issues. 

@@ -1,0 +1,613 @@
+---
+title: "Time Series and Annotations in R"
+subtitle: "Introduction to the R Programming Language"
+author: "Aaron R. Williams"
+format: 
+  html: 
+    code-line-numbers: true
+    self-contained: true
+    toc: true
+execute: 
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{css echo=FALSE}
+h1 {
+    font-size: 34px;
+    color: #1696d2;
+}
+p {
+    margin: 20px 0 20px;
+}
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(here)
+
+theme_set(theme_minimal())
+
+options(scipen = 999)
+```
+
+# Introduction
+
+This guide is an introduction to visualizing time series data in R and improving data visualization annotations. In this case, time series just means long data with a date variable or date-time variable. R has a native time series object and a "tidy" [tsibble](https://tsibble.tidyverts.org/) object. This training will not address those types of data. 
+
+-----
+
+# Dates and Times
+
+## Dates
+
+There are many ways to store dates.
+
+* March 14, 1992
+* 03/14/1992
+* 14/03/1992
+* 14th of March '92
+
+One way of storing dates is the **best**. The [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format is an international standard with appealing properties like fixed lengths and self ordering. The format is `YYYY-MM-DD`. 
+
+`library(lubridate)` has useful functions that will take dates of any format and convert them to the ISO 8601 standard. 
+
+```{r}
+library(lubridate)
+
+mdy("March 14, 1992")
+mdy("03/14/1992")
+dmy("14/03/1992")
+dmy("14th of March '92")
+
+```
+
+These functions return variables of class `"Date"`. 
+
+```{r}
+class(mdy("March 14, 1992"))
+
+```
+
+-----
+
+## Date Times
+
+`library(lubridate)` also contains functions for parsing date times into ISO 8601 standard. Times are slightly trickier because of time zones. 
+
+```{r}
+mdy_hms("12/02/2021 1:00:00")
+
+mdy_hms("12/02/2021 1:00:00", tz = "EST")
+
+mdy_hms("12/02/2021 1:00:00", tz = "America/Chicago")
+
+```
+
+By default, `library(lubridate)` will put the date times in Coordinated Universal Time (UTC), which is the successor to Greenwich Mean Time (GMT). I recommend carefully reading the data dictionary if time zones are important for your analysis or if your data cross time zones. This is especially important during time changes (e.g. "spring forward" and "fall back"). 
+
+Fortunately, if you encode your dates or date-times correctly, then `library(lubridate)` will automatically account for time changes, time zones, leap years, leap seconds, and all of the quirks of dates and times. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+
+```{r}
+dates <- tribble(
+  ~date,
+  "12/01/1987",
+  "12/02/1987",
+  "12/03/1987"
+)
+
+```
+
+<font color="#55b748">**Step 1:**</font> Create the `dates` data from above with `tribble()`.
+
+<font color="#55b748">**Step 2:**</font> Use `mutate()` to convert the `date` column to the ISO 8601 standard.
+
+-----
+
+# Line Plots
+
+It is straightforward to create line plots with a variable of type `"Date"` on the x-axis. Let's combine two series about unemployment from FRED into one data set. 
+
+```{r}
+# https://fred.stlouisfed.org/series/UNRATE
+# accessed on 2021-11-19
+u3_rate <- read_csv(here("day03", "data", "UNRATE.csv"))
+
+# https://fred.stlouisfed.org/series/U6RATE
+# accessed on 2021-11-19
+u6_rate <- read_csv(here("day03", "data", "U6RATE.csv"))
+
+# combine the U3 and U6 data
+rates <- left_join(u3_rate, u6_rate, by = "DATE")
+
+```
+
+Plot!
+
+```{r}
+rates %>%
+  ggplot(mapping = aes(x = DATE, y = UNRATE)) +
+  geom_line()
+
+```
+
+Let's clean this up some. We divide `UNRATE` by 100 because `ggplot2` works better with proportions. 
+
+```{r}
+rates %>%
+  mutate(UNRATE = UNRATE / 100) %>%
+  ggplot(mapping = aes(x = DATE, y = UNRATE)) +
+  geom_line() +
+  scale_y_continuous(
+    limits = c(0, NA),
+    labels = scales::percent_format(accuracy = 1)
+  ) +
+  labs(
+    title = "The Unemployment Rate Spiked After the Emergence of COVID-19",
+    subtitle = "",
+    x = "Date",
+    y = "Unemployment Rate",
+    caption = "Source: Bureau of Labor Statistics data accessed through FRED"
+  )
+  
+```
+
+### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+
+<font color="#55b748">**Step 1:**</font> Recreate the simple line plot of the U3 unemployment rate. Set the color of the line to blue. 
+
+<font color="#55b748">**Step 2:**</font> Add a second layer with a line with the U6 unemployment rate. Set the color of the line to red.
+
+# Pivoting
+
+Exercise 2 is tedious. What if we want to show the U3 and U6 unemployment rates on the same plot without repeating `geom_line()`? `library(ggplot2)` expects "long" data for this and we will need to use [pivoting](https://r4ds.had.co.nz/tidy-data.html?q=pivot#pivoting).
+
+```{r echo = FALSE}
+knitr::include_graphics(here("images", "pivoting.png"))
+
+```
+
+`pivot_longer()` performs this operation. First, state the columns you want (or don't want) to pivot. Second, name the new column that will contain the old column headers with `names_to =`. Third, name the new column where the cell values will go with `values_to =`.
+
+The following code pivots every column except `DATE`, sends the old column names to a new column called `series`, and sends the old cell values to a column called `rate`.
+
+We map **variables** to aesthetic mappings. Now `series` is a variable and we can map it to the color aesthetic. 
+
+```{r}
+rates %>%
+  pivot_longer(
+    cols = -DATE, 
+    names_to = "series", 
+    values_to = "rate"
+  ) %>%
+  ggplot(mapping = aes(x = DATE, y = rate, color = series)) +
+  geom_line()
+
+```
+
+The inverse of `pivot_longer()` is `pivot_wider()`. 
+
+```{r}
+rates
+
+rates %>%
+  pivot_longer(
+    cols = -DATE, 
+    names_to = "series", 
+    values_to = "rate"
+  ) %>%
+  pivot_wider(
+    names_from = series, 
+    values_from = rate
+  )
+
+```
+
+**Note:** `pivot_longer()` and `pivot_wider()` replace older functions like `gather()`/`spread()` and `melt()`/`cast()`.
+
+
+### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+
+Consider this plot of the upper-bound of the Federal Funds Rate target. Note how we use `geom_step()` because we want a stepwise plot instead of straight-line interpolation between observations. 
+
+```{r}
+# lower_limit: https://fred.stlouisfed.org/series/DFEDTARL
+# upper_limit: https://fred.stlouisfed.org/series/DFEDTARU
+# downloaded from FRED on 2022-01-08
+
+fed_funds_rate <- read_csv(
+  "date, upper_limit, lower_limit
+   2014-01-01,0.0025,0
+   2015-12-16,0.0050,0.0025
+   2016-12-14,0.0075,0.005
+   2017-03-16,0.0100,0.0075
+   2017-06-15,0.0125,0.01
+   2017-12-14,0.0150,0.0125
+   2018-03-22,0.0175,0.015
+   2018-06-14,0.0200,0.0175
+   2018-09-27,0.0225,0.02
+   2018-12-20,0.025,0.0225
+   2019-08-01,0.0225,0.02
+   2019-09-19,0.02,0.0175
+   2019-10-31,0.0175,0.015
+   2020-03-03,0.0125,0.01
+   2020-03-15,0.0025,0
+   2022-03-16,0.005,0.0025
+   2022-05-04,0.01,0.0075
+   2022-06-15,0.0175,0.015
+   2022-07-27,0.025,0.0225
+   2022-09-21,0.0325,0.03
+   2022-11-02,0.04,0.0375
+   2022-12-14,0.045,0.0425
+   2023-01-08,0.045,0.0425"
+)
+
+fed_funds_rate %>%
+  ggplot(mapping = aes(x = date, y = upper_limit)) + 
+  geom_step() +
+  scale_x_date(
+    expand = expand_scale(mult = c(0.002, 0.04)), 
+    breaks = "1 year",
+    date_labels = "%Y"
+  ) +
+  scale_y_continuous(
+    expand = expand_scale(mult = c(0, 0.002)), 
+    breaks = c(0, 0.025, 0.05),
+    limits = c(0, 0.05),
+    labels = scales::percent
+  ) +  
+  labs(
+    x = "Date",
+    y = "Upper-bound of the Federal Funds Rate"
+  )
+
+```
+
+<font color="#55b748">**Step 1:**</font> Create the `fed_funds_rate` data set.
+
+<font color="#55b748">**Step 2:**</font> Pivot the data longer. Call the names column `"bound"` and the values column `"rate"`. 
+
+<font color="#55b748">**Step 3:**</font> Create a plot similar to the above plot with one line for the upper limit and one line for the lower limit.
+
+# Shading
+
+It is useful to shade regions on a time series plot to show events or periods like recessions. 
+
+FRED contains dates for recession bars based on the NBER's business cycle turning points. Here, I copied the dates and turned them into a data frame. 
+
+
+```{r}
+# https://fredhelp.stlouisfed.org/fred/data/understanding-the-data/recession-bars/
+# downloaded from FRED on 2021-11-19
+
+recessions <- read_csv(
+  "Peak, Trough
+   1857-06-01, 1858-12-01
+   1860-10-01, 1861-06-01
+   1865-04-01, 1867-12-01
+   1869-06-01, 1870-12-01
+   1873-10-01, 1879-03-01
+   1882-03-01, 1885-05-01
+   1887-03-01, 1888-04-01
+   1890-07-01, 1891-05-01
+   1893-01-01, 1894-06-01
+   1895-12-01, 1897-06-01
+   1899-06-01, 1900-12-01
+   1902-09-01, 1904-08-01
+   1907-05-01, 1908-06-01
+   1910-01-01, 1912-01-01
+   1913-01-01, 1914-12-01
+   1918-08-01, 1919-03-01
+   1920-01-01, 1921-07-01
+   1923-05-01, 1924-07-01
+   1926-10-01, 1927-11-01
+   1929-08-01, 1933-03-01
+   1937-05-01, 1938-06-01
+   1945-02-01, 1945-10-01
+   1948-11-01, 1949-10-01
+   1953-07-01, 1954-05-01
+   1957-08-01, 1958-04-01
+   1960-04-01, 1961-02-01
+   1969-12-01, 1970-11-01
+   1973-11-01, 1975-03-01
+   1980-01-01, 1980-07-01
+   1981-07-01, 1982-11-01
+   1990-07-01, 1991-03-01
+   2001-03-01, 2001-11-01
+   2007-12-01, 2009-06-01
+   2020-02-01, 2020-04-01"
+)
+
+```
+
+We can use `geom_rect()` to add the shaded regions to a plot. Unlike most other geometric objects we've used, `geom_rect()` has four required arguments: `xmin`, `xmax`, `ymin`, and `ymax`.
+
+```{r}
+recessions %>%
+  ggplot(aes(xmin = Peak, xmax = Trough, ymin = 0, ymax = 1)) +
+  geom_rect(alpha = 0.3)
+
+```
+
+### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+
+<font color="#55b748">**Step 1:**</font> Recreate the first plot with the U3 unemployment rate. 
+
+<font color="#55b748">**Step 2:**</font> Use `filter()` to filter the recessions data to `Peak >= "1950-01-01"`. 
+
+<font color="#55b748">**Step 3:**</font> Add recessions shading to the plot with `geom_rect()` as a new layer. 
+
+# Annotations
+
+We used `geom_text()` to label bars for Jon Schwabish's "Guideline 3: Integrate the Graphics and Text". We also used `geom_label()` to label lines for Jon Schwabish's "Guideline 5: Start with Gray".
+
+Geometric objects require at least one variable in a data frame. Sometimes we just want to add a label or a single shaded region without needing an entire data set. `annotate()` can add individual text annotations or shaded regions.
+
+The Ames Housing data set contains house prices and features in Ames, Iowa. It is common data set for predictive modeling. Three homes are particularly difficult to predict because they are unfinished. 
+
+```{r}
+library(AmesHousing)
+
+ames <- make_ames()
+
+ames %>%
+  mutate(
+    square_footage = Total_Bsmt_SF - Bsmt_Unf_SF + First_Flr_SF + Second_Flr_SF
+  ) %>%
+  ggplot(aes(square_footage, Sale_Price)) +
+  geom_point(alpha = 0.2, color = "#1696d2") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0.002)),
+    limits = c(-10, 12000),
+    labels = scales::comma
+  ) + 
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.002)),
+    limits = c(0, 800000),
+    labels = scales::dollar
+  ) +  
+  annotate("rect", xmin = 6800, xmax = 11500, ymin = 145000, ymax = 210000, alpha = 0.1) +
+  annotate("text", x = 8750, y = 230000, label = "Unfinished homes") +
+  labs(
+    x = "Square footage", 
+    y = "Sale price"
+  ) +
+  theme(plot.margin = margin(t = 6, r = 14, b = 6, l = 6))
+
+```
+
+### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+
+<font color="#55b748">**Step 1:**</font> Duplicate your code from the previous exercise.
+
+<font color="#55b748">**Step 2:**</font> Use `annotate()` to add a text annotation for the recession during the start of the COVID-19 pandemic.
+
+# Adding trend lines
+
+Ben Casselman from the New York Times does great data visualization Twitter threads every "jobs day". His data visualizations are created in R and his process is fairly automated at this point. Let's consider [this example](https://twitter.com/bencasselman/status/1456606314654797831), which includes a simple linear trend line. 
+
+```{r}
+# https://fred.stlouisfed.org/series/PAYEMS
+# accessed on 2021-11-19
+
+payrolls <- read_csv(here("day03", "data", "PAYEMS.csv")) %>%
+  mutate(PAYEMS = PAYEMS / 1000)
+
+# filter to pre-pandemic data for model estimation
+payrolls_pre_pandemic <- payrolls %>%
+  filter(DATE < "2020-03-31")
+
+# fit a simple linear regression model with DATE as the predictor
+pre_pandemic_trend <- lm(PAYEMS ~ DATE, data = payrolls_pre_pandemic)
+
+# extract coefficients
+pre_pandemic_coefs <- coef(pre_pandemic_trend)
+
+# plot
+ggplot() +
+  geom_line(
+    data = payrolls,
+    aes(DATE, PAYEMS)
+  ) +
+  geom_abline(
+    intercept = pre_pandemic_coefs["(Intercept)"], 
+    slope = pre_pandemic_coefs["DATE"],
+    linetype = "dashed"
+  ) +
+  scale_y_continuous(limits = c(NA, 160))
+
+```
+
+Instead of using `geom_abline()`, we could have used `broom()` or `predict()` and added a second layer with `geom_line()`. 
+
+### `r kableExtra::text_spec("Exercise 6", color = "#1696d2")`
+
+<font color="#55b748">**Step 1:**</font> Duplicate the above example. 
+
+<font color="#55b748">**Step 2:**</font> Estimate a linear model using just the 2021 data. To do this, create a new object with `filter()` for observations since `"2021-01-01"`. 
+
+<font color="#55b748">**Step 3:**</font> Add the 2021 trend line as a new layer.
+
+<font color="#55b748">**Step 4:**</font> Use `scale_x_date()` to extend the limits to include the intersection of the trend lines. Hint: You set the limits with `limits = c(???, ???)` where the first value is the minimum and second value is the maximum. In this case, you will need to wrap the limits in `as_date()`.
+
+# Adding forecasts
+
+Sometimes we have forecasts and we want to show many possible outcomes or a range of possible outcomes. 
+
+Let's start with the six months of data from `VTI`, Vanguard's total U.S. stock market ETF. 
+```{r}
+library(tidyquant)
+
+vti <- tq_get(
+  from = "2021-01-01",
+  to = "2021-06-30",
+  x  = "VTI"
+)
+
+```
+
+Let's add a random walk for 100 days after the known first six months. This function takes a date and a closing price and then adds 100 days of a random walk with mean `mean = 1.001` and `sd = 0.01`. This means the forecast has a modest upward slope and a fair amount of variance. 
+
+```{r}
+#' Add a random walk to a stock
+#'
+#' @param iteration An id for the random walk
+#' @param last_date A date for the last date of observed data
+#' @param last_close A numeric for the last closing price
+#'
+#' @return A tidy data frame with iteration id, data, and price
+#' 
+forecast <- function(iteration, last_date, last_close) {
+  
+  start_date <- date(last_date) + days(1)
+  end_date <- date(last_date) + days(100)
+  
+  tibble(
+    date = c(date(last_date), seq(start_date, end_date, by = "day")),
+    forecast_close = cumprod(c(last_close, rnorm(100, mean = 1.001, sd = 0.01))),
+    iteration = iteration
+  )
+  
+}
+
+```
+
+One random walk is only so interesting. Let's iterate the random walk 1,001 times with `map_dfr()`. `map()` functions come from `library(purrr)` and are based on the Map-Reduce framework. This is a functional approach to iteration that replaces for loops. I recommend reading more [here](https://r4ds.had.co.nz/iteration.html). 
+
+```{r}
+forecasts <- map_dfr(
+  .x = 1:1001, 
+  .f = ~forecast(
+    iteration = .x, 
+    last_date = "2021-06-30", 
+    last_close = pull(slice_max(vti, date), close)
+  )
+)
+
+```
+
+Now we can visualize. First we add a layer with the historical data. Second, we add the random walks. Here `group = iteration` links the points together into lines from each random walk.
+
+```{r}
+ggplot() +
+  geom_line(
+    data = vti,
+    mapping = aes(date, close)
+  ) +
+  geom_line(
+    data = forecasts,
+    mapping = aes(date, forecast_close, group = iteration),
+    alpha = 0.05
+  )
+
+```
+
+Suppose we want to highlight the median forecast in blue and add the daily average in red. 
+
+```{r}
+# calculate the daily mean
+daily_mean <- forecasts %>%
+  group_by(date) %>%
+  summarize(forecast_close = mean(forecast_close))
+
+# find the median forecast
+# note: this is trickier if we have an even  number of forecasts
+median_forecast <- forecasts %>%
+  slice_max(date) %>%
+  filter(median(forecast_close) == forecast_close) %>%
+  pull(iteration)
+
+# plot (with four layers)!
+ggplot() +
+  geom_line(
+    data = vti,
+    mapping = aes(date, close)
+  ) +
+  geom_line(
+    data = forecasts,
+    mapping = aes(date, forecast_close, group = iteration),
+    alpha = 0.05
+  ) +
+  geom_line(
+    data = daily_mean,
+    mapping = aes(date, forecast_close),
+    color = "red"
+  ) +
+  geom_line(
+    data = filter(forecasts, iteration == median_forecast),
+    mapping = aes(date, forecast_close),
+    color = "blue"
+  ) +
+  labs(subtitle = "Daily average in red, median forcaset in blue")
+
+```
+
+What if we want to show intervals instead of lines. First, we can group by date and calculate 80%, 95%, and 99% intervals for each day. 
+
+```{r}
+intervals <- forecasts %>%
+  group_by(date) %>%
+  summarize(
+    q = c(0.005, 0.025, 0.1, 0.9, 0.975, 0.995),
+    forecast_close = quantile(
+      forecast_close, 
+      probs = c(0.005, 0.025, 0.1, 0.9, 0.975, 0.995)
+    )
+  ) %>%
+  ungroup() 
+
+```
+
+We need to do some tricky data munging. First, we need to label each quantile as the minimum or maximum of the interval. Second we need to associate each maximum percentile with its maximum. We call this `interval`. Finally, we pivot the data to be wider so the minimum and maximum are separate variables. 
+
+```{r}
+intervals <- intervals %>%
+  mutate(bound = if_else(q < 0.5, "minimum", "max")) %>%
+  mutate(
+    interval = case_when(
+      q %in% c(0.005, 0.995) ~ "99%",
+      q %in% c(0.025, 0.975) ~ "95%",
+      q %in% c(0.1, 0.9) ~ "80%"
+    )
+  ) %>%
+  select(-q) %>%
+  pivot_wider(names_from = bound, values_from = forecast_close)
+
+ggplot() +
+  geom_line(
+    data = vti,
+    mapping = aes(date, close)
+  ) +
+  geom_ribbon(
+    data = intervals,
+    aes(date, ymin = minimum, max = max, color = interval, fill = interval),
+    alpha = 0.2
+  )
+
+```
+
+## Final exercise: telework during the pandemic
+
+### `r kableExtra::text_spec("Exercise 7", color = "#1696d2")`
+
+Let's recreate [another interesting Ben Casselman data viz](https://twitter.com/bencasselman/status/1456604915585982467). This one is about remote work. The data visualization uses a new variable in the CPS called `COVIDTELEW`, which asks if respondents "Worked remotely for pay due to COVID-19 pandemic".
+
+<font color="#55b748">**Step 1:**</font> Load `remote-work.csv` in the data folder. If you are using `library(here)`, then `read_csv(here("day03", "data", "remote-work.csv"))`. 
+
+<font color="#55b748">**Step 2:**</font> Run the following code to generate a data frame with labels for each series. 
+
+```{r}
+#| eval: false
+labels <- remote %>%
+  slice_max(date) %>%
+  mutate(date = date + months(3))
+
+```
+
+<font color="#55b748">**Step 3:**</font> Recreate the plot from Ben Casselman's tweet. You may need to tinker with `scale_x_date()`. 
