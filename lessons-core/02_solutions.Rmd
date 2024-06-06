@@ -1,0 +1,189 @@
+---
+title: "Grammar of Graphics"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+    css: !expr here::here("www", "web_report.css")
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+options(scipen = 999)
+
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+I can write notes here 
+
+We start with the storms data...
+
+```{r}
+# this is comment
+ggplot(data = storms) + 
+  geom_point(mapping = aes(x = pressure, y = wind))
+
+```
+
+## Exercise 2
+
+```{r}
+# step 1
+ggplot(data = storms) + 
+  geom_point(mapping = aes(x = pressure, y = wind, color = category))
+
+# step 2
+ggplot(data = storms) + 
+  geom_point(mapping = aes(x = pressure, y = wind, color = "green"))
+
+# step 3
+ggplot(data = storms) + 
+  geom_point(mapping = aes(x = pressure, y = wind), color = "green")
+
+# step 4
+ggplot(data = storms) + 
+  geom_point(mapping = aes(x = pressure, y = wind), alpha = 0.05)
+
+
+```
+
+## Exercise 3
+
+```{r}
+ggplot(data = msleep) +
+  geom_point(mapping = aes(x = bodywt, y = sleep_total)) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, NA))
+
+```
+
+```{r}
+storms %>%
+  ggplot() +
+  geom_point(mapping = aes(x = pressure, y = wind, color = status)) +
+  scale_color_manual(
+    values = c(`hurricane` = "yellow", `tropical depression` = "blue", `tropical storm` = "red", `tornado` = "green")
+  )
+
+
+```
+
+
+
+## Exercise 4
+
+```{r}
+data <- tibble(x = 1:10, y = 1:10)
+
+ggplot(data = data) +
+  geom_blank(mapping = aes(x = x, y = y)) +
+  coord_polar() +
+  labs(title = "Polar coordinate system")
+
+```
+
+## Exercise 5
+
+```{r}
+ggplot(data = storms) +
+  geom_point(mapping = aes(x = pressure, y = wind)) +
+  facet_wrap(~ month)
+
+storms %>%
+  filter(year %in% c(1985, 2003)) %>%
+  filter(month %in% c(6, 7, 8)) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = pressure, y = wind, color = status)) +
+  facet_grid(year ~ month)
+
+```
+
+## Exercise 6
+
+```{r}
+ggplot(data = storms) +
+  geom_bar(mapping = aes(x = category))
+
+count(storms, category) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = category, y = n))
+
+count(storms, category, year)
+
+
+```
+
+## Exercise 7
+
+```{r}
+ggplot(storms) +
+  geom_bar(mapping = aes(x = category)) +
+  theme_minimal()
+
+```
+
+## Exercise 8
+
+```{r}
+storms %>%  
+  filter(category > 0) %>%
+  distinct(name, year) %>%
+  count(year) %>%
+  ggplot() + 
+  geom_line(mapping = aes(x = year, y = n)) +
+  geom_point(mapping = aes(x = year, y = n))
+
+
+```
+
+## Exercise 9
+
+```{r}
+ggplot(data = storms, mapping = aes(x = pressure, y = wind)) + 
+  geom_point() +
+  geom_smooth()
+
+centroids <- storms %>%
+  group_by(category) %>%
+  summarize(
+    pressure = mean(pressure),
+    wind = mean(wind)
+  )
+
+ggplot(mapping = aes(pressure, wind)) +
+  geom_point(
+    data = storms,
+    mapping = aes(color = category),
+    alpha = 0.2
+  ) +
+  geom_point(
+    data = centroids,
+    size = 4,
+    color = "pink"
+  )
+
+ggsave(filename = "favorite-plot.png", width = 6.5, height = 4)
+
+```
+
+## Exercise 10
+
+```{r}
+storms %>%  
+  filter(category > 0) %>%
+  distinct(name, year) %>%
+  count(year) %>%
+  ggplot(mapping = aes(x = year, y = n)) + 
+  geom_line() +
+  geom_point()
+
+ggsave(filename = "favorite-plot.png", width = 6.5, height = 4)
+
+```

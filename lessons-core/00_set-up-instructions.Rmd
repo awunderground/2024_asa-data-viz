@@ -1,0 +1,42 @@
+---
+title: "Data Visualization with R Setup Instructions"
+author: "Aaron R. Williams"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I look forward to the upcoming *Data Visualization with R* training. All materials for the training will be easily accessible online. The training should be useful and navigable to newer and experienced users of R. 
+
+If you are less familiar with R or the tidyverse, please consider reading sections 1.4, 1.5, 4, and 6 of the freely available [R for Data Science](https://r4ds.had.co.nz/index.html). The sections are very short. Section 5 is very useful but optional.
+
+## Software Installations
+
+Before the event, please ensure that the following installations are up-to-date. **Note:** Some installations may require administrative approval for work and school computers. 
+
+### R
+
+R version 4.0.0 or greater is best. To check your version, open RStudio and run `getRversion()` in the Console. 
+
+To update or install R, visit [CRAN](https://cran.r-project.org/) and then select the download link that matches your operating system (Windows, Mac, or Linux). Note there may be several options (e.g. macOS 11 vs. macOS 10.13). Select and install the version that best matches your computer setup. 
+
+### RStudio
+
+RStudio 1.4.0 or greater is best. To check your version, open RStudio, click "Help", and click "About RStudio". **Note:** The version numbers have changed and anything starting with 2022 is great. 
+
+To update or install RStudio, visit [this link](https://www.rstudio.com/products/rstudio/), navigate to the section for "RStudio Desktop", click "Download RStudio Desktop", and click "Download" under "Open Source License".
+
+### tidyverse
+
+`library(tidyverse 1.3.0)` or greater is best. To check your version, open RStudio and run `packageVersion("tidyverse")` in the RStudio console, or click the "Packages" tab in RStudio and scroll down to "tidyverse". 
+
+To update or install `library(tidyverse)`, run `install.packages("tidyverse")` in the RStudio console. *The installation may return prompts in the Console that require responses.*
+
+## Further help
+
+[Section 1.4 in R4DS](https://r4ds.had.co.nz/introduction.html#prerequisites) includes similar installation instructions with additional context and images.  
+
+Please contact Aaron R. Williams at aaronrwilliams100@gmail.com with installation issues or questions prior to the event. 

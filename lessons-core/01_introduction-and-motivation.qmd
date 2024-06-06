@@ -1,0 +1,167 @@
+---
+title: "Introduction and Motivation"
+subtitle: "Introduction to the R Programming Language"
+author: "Aaron R. Williams"
+format: 
+  html: 
+    code-line-numbers: true
+    embed-resources: true
+execute: 
+  warning: false
+  message: false
+---
+
+# Introductions
+
+### Background
+
+* Lead Data Scientist for Statistical Computing at the [Urban Institute](https://www.urban.org/)
+* Adjunct Professor in the McCourt School of Public Policy at Georgetown University
+* American Statistical Association Traveling Course Instructor
+
+### R Projects
+
+* Synthetic data generation ([rstudio::conf(2022) talk about `library(tidysynthesis)`](https://www.youtube.com/watch?v=ai8QU5jJNIw&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=42))
+* Formal privacy/differential privacy evaluation
+    - ([code](https://github.com/UI-Research/formal-privacy-comp))  ([arXiv](https://arxiv.org/abs/2110.12055))
+    -
+- Projects that iterate with R Markdown/Quarto
+    - [Mobility Metrics data pages]()
+    - [State Fiscal briefs](https://www.urban.org/policy-centers/cross-center-initiatives/state-and-local-finance-initiative/projects/state-fiscal-briefs)
+* Manage the Urban Institute ggplot2 theme ([Examples](https://urbaninstitute.github.io/r-at-urban/graphics-guide.html)) ([Code](https://github.com/UrbanInstitute/urbnthemes))
+* [Urban Institute R Users Group](https://urbaninstitute.github.io/r-at-urban/)
+
+-----
+
+# Questions for You
+
+* What types of analyses do you develop?
+* What is your programming experience?
+* What are you most interested to learn?
+
+-----
+
+# Motivation
+
+### Code-First Data Analysis
+
+I believe in a **code-first approach** to data analysis. 
+
+1. Code maximizes the chance of catching mistakes when they inevitably happen. 
+2. Code is the clearest way to document and share an analysis. 
+3. Reproducible code creates a [single source of truth](https://posit.co/blog/the-advantages-of-code-first-data-science/). Any result can be mapped back to the code and data that created the result. 
+4. Code allows for robust version control. 
+5. Code can scale analyses to bigger data and bigger projects.
+6. R code is entirely free and open source.
+7. Code is the best way to gain access to new techniques and cool stuff. 
+
+-----
+
+# Outline
+
+### Process
+
+* Please consider turning on your cameras. 
+* Please ask questions at any time. You can speak up, raise your hand, or drop it in the chat. 
+* I need to know how you are doing. Please ask lots of questions and give your reactions.
+* I will check in during breaks about pacing and content.
+* We will skip some exercises. Don't worry, I've shared solutions to all exercises!
+
+### Goals
+
+* Enthusiasm
+* Develop a firm foundation with R
+* Leave with enough understanding and resources that you can apply the covered material to your own work
+    * You will still need to look stuff up!
+    * I will try to give you hints for where to find help
+
+-----
+
+# Content
+
+### Core Content
+
+1. Introductions and Motivation
+2. Grammar of Graphics
+3. Jon Schwabish's Five Guidelines for Better Data Visualizations
+
+### Optional Content
+
+* Visualizing big data
+* Visualizing regression models
+* Data munging for visualization
+* Visualizing time series data
+
+-----
+
+# Why Data Visualization?
+
+1. Data visualization is exploratory data analysis (EDA)
+2. Data visualization is diagnosis and validation
+3. Data visualization is communication
+
+# Why `ggplot2`
+
+### 1. Looks good!
+
+`library(ggplot2)` is used by [fivethirtyeight](https://fivethirtyeight.com/features/the-56-best-and-weirdest-charts-we-made-in-2019/), [Financial Times](https://johnburnmurdoch.github.io/slides/r-ggplot/#/), [BBC](https://bbc.github.io/rcookbook/), the [Urban Institute](https://urbaninstitute.github.io/r-at-urban/graphics-guide.html), and more. 
+
+### 2. Flexible and expressive
+
+By breaking data visualization into component parts, `library(ggplot2)` is a set of building blocks instead of a set of rigid cookie cutters. 
+
+### 3. Reproducible
+
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images", "show-your-work.png"))
+
+```
+
+### 4. Scalable
+
+It's almost as easy to make the 100th chart as it is to make the 2nd chart. This allows for [iteration](https://www.urban.org/policy-centers/cross-center-initiatives/state-and-local-finance-initiative/projects/state-fiscal-briefs). 
+
+### 5. In my analysis workflow
+
+```{r echo=FALSE}
+knitr::include_graphics(here::here("images", "parallel.gif"))
+
+```
+
+Data visualization is fundamental to EDA, statistical modeling, and basically any work with data. Too many people find themselves using different tools for data visualization and statistical modeling. R/ggplot2 allows everything to happen in the same script at the same time. 
+
+Too often, switching from a programming language to Excel, results in parsing errors or cell-reference errors. 
+
+-----
+
+# R Markdown
+
+* [RStudio Tutorial](https://rmarkdown.rstudio.com/lesson-1.html)
+
+This short course will rely on R Markdown, which is a literate statistical programming framework that combines text and images, code, and code output into output documents like PDFs and web pages. It is like an easier-to-use LaTeX with more flexibility. Instead of .R scripts, we will use .Rmd scripts. 
+
+1. Markdown
+2. YAML Header
+3. Code chunks
+
+### Running code in documents
+
+We will mostly run code inside of .Rmd documents. 
+
+1. Run the code like a .R script
+2. Run the entire current chunk ![](`r here::here("images", "run-chunk.png")`){width=5%}
+3. Run all chunks above ![](`r here::here("images", "run-chunk-above.png")`){width=5%}
+
+### Knitting documents
+
+More commonly, documents are knitted. This runs all of the code in the .Rmd in a new R session and then creates an output document like a .html or a .pdf. If the code has errors, knitting will fail.
+
+Click ![](`r here::here("images", "knit.png")`){width=20%} when a .Rmd document is open in RStudio to knit the document.
+
+### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+
+<font color="#55b748">Step 1:</font> Open RStudio by double-clicking `2024_asa-data-viz.Rproj`
+
+<font color="#55b748">Step 2:</font> Open `02_workbook.Rmd` in RStudio. Make sure it is in `2024_asa-data-viz.Rproj`. That is, you should not see `Project: (None)` in the top right of RStudio.
+
+<font color="#55b748">Step 3:</font> Click knit!
