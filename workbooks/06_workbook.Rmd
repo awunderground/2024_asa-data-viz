@@ -1,0 +1,62 @@
+---
+title: "Data Munging for Data Visualization"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(here)
+
+```
+
+## Exercise 1
+
+```{r}
+tribble(
+  ~Class, ~`male passengers/female passengers`,
+  "1st class", "179|144",
+  "2nd class", "171|106",
+  "3rd class", "493|216",
+)
+
+## YOUR WORK GOES HERE
+
+```
+
+## Exercise 2
+
+```{r}
+tribble(
+  ~Class, ~female_passengers, ~male_passengers,
+  "1st class", 144, 179,
+  "2nd class", 106, 171,
+  "3rd class", 216, 493
+)
+
+## YOUR WORK GOES HERE
+
+```
+
+## Exercise 3
+
+```{r}
+tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+)
+
+## YOUR WORK GOES HERE
+
+```

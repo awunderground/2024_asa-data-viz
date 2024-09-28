@@ -1,0 +1,4 @@
+# Abstract {.unnumbered}
+
+A reproducible research workflow should generate the same results from the same inputs every time. Unfortunately, software changes, key documentation is skipped, and that hard drive from graduate school disappeared during that last move. Reproducible research should be a minimum expectation of computational science, but too many researchers lack the tools to embrace a fully reproducible workflow. This full-day course aims to equip researchers with fundamental tools for reproducible research. The course will introduce Quarto, Git and GitHub, coding best practices, and environment management with renv through hands-on exercises and clear resources. Attendees will leave equipped to weather constantly changing software versions, documentation will be too fun to skip, and even a missing hard drive won't ruin years of work. The course focuses on R but the content is broadly applicable.
+ 

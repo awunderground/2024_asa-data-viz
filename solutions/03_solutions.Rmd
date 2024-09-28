@@ -1,0 +1,188 @@
+---
+title: "Grammar of Graphics"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+tidy_anscombe <- 
+  anscombe %>%
+  # make the wide data too long
+  pivot_longer(everything(), names_to = "names", values_to = "value") %>%
+  # split the axis and quartet id
+  mutate(
+    coord = str_sub(names, start = 1, end = 1),
+    quartet = str_sub(names, start = 2, end = 2) 
+  ) %>%
+  group_by(quartet, coord) %>%
+  mutate(id = row_number()) %>%
+  # make the data tidy
+  pivot_wider(id_cols = c(id, quartet), names_from = coord, values_from = value) %>%
+  ungroup() %>%
+  select(-id)
+
+ggplot(data = tidy_anscombe, mapping = aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ quartet)
+
+```
+
+## Exercise 2
+
+```{r}
+titanic <- tribble(
+  ~Class, ~Sex, ~n,
+  "1st class", "female passengers", 144,
+  "1st class", "male passengers", 179,
+  "2nd class", "female passengers", 106,
+  "2nd class", "male passengers", 171, 
+  "3rd class", "female passengers", 216,
+  "3rd class", "male passengers", 493
+)
+
+titanic %>%
+  ggplot(mapping = aes(Class, n, fill = Sex)) + 
+  geom_col() +
+  labs(
+    title = "Titanic Deaths were Concentrated in 3rd Class", 
+    subtitle = "subtitle", 
+    caption = "caption", 
+    y = NULL, 
+    fill = "Legend: Sex"
+  )
+
+```
+
+## Exercise 3
+
+```{r}
+titanic %>%
+  ggplot(mapping = aes(x = Class, y = n, fill = Sex)) +
+  geom_col() +
+  labs(
+    title = "Most Titanic deaths were in 3rd class",
+    caption = "Data from library(titanic)"
+  )
+
+```
+
+## Exercise 4
+
+```{r}
+library(ggtext)
+
+theme_set(theme_minimal())
+
+titanic %>%
+  ggplot(aes(x = Class, y = n, fill = Sex)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "More 
+    <span style='color:#00BFC4;'>male passengers</span> died than 
+    <span style='color:#F8766D;'>female passengers</span> in all three classes on the Titanic",
+    x = NULL,
+    y = NULL
+  ) +
+  theme(plot.title = element_markdown()) +
+  guides(fill = "none")
+
+
+
+
+titanic %>%
+  ggplot(aes(x = Class, y = n, fill = Sex)) +
+  geom_col(position = "dodge") +
+  geom_text(
+    aes(label = n),
+    position = position_dodge(width = 0.9),
+    vjust = -1
+  ) +
+  scale_y_continuous(limits = c(0, 550)) +
+  labs(
+    title = "More 
+    <span style='color:#00BFC4;'>male passengers</span> died than 
+    <span style='color:#F8766D;'>female passengers</span> in all three classes",
+    x = NULL,
+    y = NULL
+  ) +
+  theme(
+    panel.grid = element_line(color = "white"),
+    plot.title = element_markdown(hjust = 0.5),
+    axis.text.y = element_blank()
+  ) +
+  guides(fill = "none")
+
+```
+
+```{r}
+data <- tribble(
+  ~feeling, ~n,
+  "unsatisfied", 25,
+  "neutral", 10,
+  "satisfied", 90
+)
+
+data %>%
+  mutate(feeling = str_to_title(feeling)) %>%
+  mutate(feeling = factor(feeling, levels = c("Unsatisfied", "Neutral", "Satisfied"))) %>%
+  ggplot(aes(feeling, n)) +
+  geom_col()
+
+
+```
+
+
+## Exercise 5
+
+```{r warning = FALSE}
+library(gghighlight)
+library(gapminder)
+
+data <- gapminder %>%
+  filter(continent %in% c("Europe")) %>%
+  group_by(country) %>%
+  mutate(pcgdp_change = ifelse(year == 1952, 0, gdpPercap - lag(gdpPercap))) %>%
+  mutate(pcgdp_change = cumsum(pcgdp_change))
+
+data %>%
+  ggplot(mapping = aes(x = year, y = pcgdp_change, group = country)) +
+  geom_line() 
+
+
+data %>%
+  ggplot(mapping = aes(x = year, y = pcgdp_change, color = country)) +
+  geom_line() +
+  gghighlight(max(pcgdp_change) < 35000) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.002, 0)),
+    breaks = c(seq(1950, 2010, 10)),
+    limits = c(1950, 2010)
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.002)),
+    breaks = 0:8 * 5000,
+    labels = scales::dollar,
+    limits = c(0, 40000)
+  ) +
+  labs(
+    x = "Year",
+    y = "Change in per-capita GDP (US dollars)"
+  )
+
+
+```

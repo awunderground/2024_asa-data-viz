@@ -1,0 +1,32 @@
+project:
+  type: book
+  output-dir: course-notes
+
+book:
+  title: "Data Visualization with R"
+  author: "Aaron R. Williams"
+  date: today
+  chapters:
+    - index.qmd
+    - part: Core Content
+      chapters:
+        - chapters/01_introduction-and-motivation.qmd
+        - chapters/02_grammar-of-graphics.qmd
+        - chapters/03_five-guidelines.qmd
+    - part: Special Topics
+      chapters:
+        - chapters/04_big-data.Rmd
+        - chapters/05_linear-regression.Rmd
+        - chapters/06_data-munging.Rmd
+        - chapters/07_time-series.qmd
+    - part: Additional Resources
+      chapters:
+        - chapters/08_where-to-go-from-here.qmd
+  appendices:
+    - chapters/reproducible-research-bootcamp_software-installation.qmd
+      
+
+format:
+  html:
+    theme: cosmo
+    number-depth: 3

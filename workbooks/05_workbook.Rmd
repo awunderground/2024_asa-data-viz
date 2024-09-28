@@ -1,0 +1,116 @@
+---
+title: "Data Viz and Regression in R"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(broom)
+library(modelr)
+library(here)
+
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+# sample 300 observations and set ordinal factors to nominal
+set.seed(20200622)
+
+diamonds <- diamonds %>%
+  slice_sample(n = 300) %>%
+  mutate(across(where(is.factor), .fns = as.character))
+
+# estimate a multiple linear regression model
+diamonds_model1 <- lm(formula = price ~ carat + cut, data = diamonds)
+
+## YOUR WORK GOES HERE
+
+```
+
+## Exercise 2
+
+```{r}
+# fit and tidy model 1
+diamonds_model1 <- lm(formula = price ~ carat + cut, data = diamonds)
+
+diamonds_model1_coefs <- tidy(
+  diamonds_model1, 
+  conf.int = TRUE,
+  conf.level = 0.95
+) 
+
+# fit and tidy model 2
+
+## YOUR WORK GOES HERE
+
+# combine the model results
+models_coefs <- bind_rows(
+  `model1` = diamonds_model1_coefs,
+  `model2` = diamonds_model2_coefs,
+  .id = "model"
+)
+
+# visualize
+
+## YOUR WORK GOES HERE
+
+```
+
+## Exercise 3
+
+```{r}
+# estimate a linear model for each country
+many_models <- diamonds %>%
+  group_by() %>% ## YOUR WORK GOES HERE
+  nest(data = c()) %>% ## YOUR WORK GOES HERE
+  mutate(
+    model = map(
+      .x = data, 
+      .f = ~glance(lm(formula = , data = .)) ## YOUR WORK GOES HERE
+    )
+  ) %>%
+  ungroup()
+    
+# extract r^2 from each model
+
+## YOUR WORK GOES HERE
+
+# plot
+
+## YOUR WORK GOES HERE
+
+```
+
+## Exercise 4
+
+```{r}
+# create a binary outcome variable
+cars <- cars %>%
+  mutate(crash = as.numeric(dist > 25))
+
+# fit a linear probability model
+cars_lm <- ## YOUR WORK GOES HERE
+
+# fit a logistic regression model
+cars_glm <- ## YOUR WORK GOES HERE
+
+# add conditional probabilities for both models
+models <- data_grid(cars, speed = seq_range(speed, 1000)) %>%
+  add_predictions(cars_lm, var = "lm") %>%
+  add_predictions(cars_glm, type = "response", var = "glm")
+
+# visualize
+
+## YOUR WORK GOES HERE
+
+```

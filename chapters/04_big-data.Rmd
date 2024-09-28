@@ -1,0 +1,325 @@
+---
+title: "Visualizing Big Data"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+    css: !expr here::here("www", "web_report.css")
+editor_options:
+  chunk_output_type: console
+---
+
+```{css echo=FALSE}
+h1 {
+    font-size: 34px;
+    color: #337AB7;
+}
+p {
+    margin: 20px 0 20px;
+}
+```
+
+```{r rmarkdown-setup, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+```
+
+```{r echo = FALSE}
+library(tidyverse)
+theme_set(theme_minimal())
+
+```
+
+# Big Data
+
+Our examples thus far have focused on data sets with a modest number of observations and variables. Larger data sets can create new challenges. 
+
+-----
+
+## Challenge 1: Overplotting
+
+*Overplotting* is when some geometric objects in a data visualization obscure other geometric objects. Overplotting is common when there is a highly frequent observation, if there is a lack of precision, or too many observations. 
+
+```{r echo = FALSE, fig.height = 3}
+library(patchwork)
+
+# frequent observations
+plot1 <- mpg %>%
+  ggplot() +
+  geom_point(aes(x = cyl, y = hwy)) +
+  labs(subtitle = "Frequent Observations")
+
+# lack of precision
+set.seed(1)
+plot2 <- tibble(
+  x = rpois(n = 10000, lambda = 10),
+  y = rpois(n = 10000, lambda = 10)
+) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(subtitle = "Lack of Precision")
+
+# too many observations
+plot3 <- diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  labs(subtitle = "Too Many Observations")
+
+plot1 + plot2 + plot3
+
+```
+
+-----
+
+## Challenge 2: Too many pairwise comparisons
+
+If $m$ is the number of variables in a data set, then there are $\frac{m(m - 1)}{2}$ pairwise relationships in a data set. 
+
+```{r}
+tibble(m = 2:200) %>%
+  mutate(`Pairwise Relationships` = m * (m - 1) / 2) %>%
+  ggplot(aes(m, `Pairwise Relationships`)) +
+  geom_line() + 
+  labs(
+    title = "The Number of Pairwise Relationships Explodes in Modestly Wide Data",
+    x = "m (Number of predictors)"
+  ) +
+  scale_y_continuous(labels = scales::comma)
+
+```
+
+-----
+
+# Overplotting
+
+### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+
+A data set doesn't need thousands of observations to have overplotting. Consider a simple example using the `mpg` data set from `library(ggplot2)`. 
+
+<font color="#55b748">Step 1:</font> Create this plot using the `mpg` data set with variables `cyl` and `hwy`. 
+
+```{r echo = FALSE}
+mpg %>%
+  ggplot() +
+  geom_point(aes(cyl, hwy))
+
+```
+
+<font color="#55b748">Step 2:</font> Use `nrow(mpg)` to count the number of observations in `mpg`. Is there overplotting?
+
+<font color="#55b748">Step 3:</font> Replace `geom_point()` with `geom_jitter()`. What happens?
+
+<font color="#55b748">Step 4:</font> Experiment with the `width` and `height` arguments. You can see the documentation with `?geom_jitter`. What seems to be the best "best" combination?
+
+The first pillar in The Seven Pillars of Statistical Wisdon by Stephen Stigler identifies an interesting paradox: 
+
+>"By aggregating, you lose the identity of the individual, so you’re throwing away information, but you’re also gaining information of a different sort. No one wants to be reduced to a statistic, but by losing the identity of the individual, you are producing information about the group."
+
+`geom_jitter()` creates a similar paradox. Just like how we gain information by throwing out information with aggregation, we can gain clarity by introducing errors to our data with `geom_jitter()`. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+
+Now we'll focus on the `diamonds` data set from `library(ggplot2)`. It contains information about 53,940 diamonds.
+
+```{r}
+glimpse(diamonds)
+
+```
+
+Jittering helps with overplotting with modestly sized data sets. It is not helpful with larger data sets. Let's look at the diamonds data set with jitter:
+
+```{r fig.height = 3}
+without_jitter <- diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  labs(subtitle = "Without Jitter")
+
+with_jitter <- diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_jitter() +
+  labs(subtitle = "With Jitter")
+
+without_jitter + with_jitter
+
+```
+
+<font color="#55b748">Step 1:</font> Create a scatter plot with the diamonds data set that shows the relationship between `carat` and `price`. 
+
+<font color="#55b748">Step 2:</font> Try the following changes:
+
+* Change the size of points with the `size` argument in `geom_point()`.
+* Change to hollow points with `shape = 1` in `geom_point()`.
+* Add transparency to points with `alpha = 0.1` in `geom_point()`.
+* Use `facet_wrap()` and `facet_grid()`
+* Try sampling with the following:
+
+```
+diamonds %>% 
+  slice_sample(n = 1000) %>%
+  ggplot() + ...
+
+```
+
+<font color="#55b748">Step 3:</font> Which do you prefer? What did you learn about the `diamonds` data set with these different techniques?
+
+-----
+
+### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+
+We'll continue with the `diamonds` data set. This time we'll experiment with some summaries instead of visualizing all observations directly. 
+
+<font color="#55b748">Step 1:</font> Create a scatter plot with the diamonds data set that shows the relationship between `carat` and `price`. 
+
+<font color="#55b748">Step 2:</font> Try the following changes:
+
+* Use `geom_hex()` instead of `geom_point()` for multi-dimensional binning with hexagons. Experiment with different values for the argument `bins`.
+* Add `geom_smooth()` to add a model on top of the points. 
+
+-----
+
+### Long Data Summary
+
+Overplotting is a major challenge even with modestly sized data. There are at least three causes for the problem:
+
+1. Frequent values
+2. Lack of precision
+3. Many observations
+
+We've explored some solutions to overplotting, but the right solution depends on the cause of the overplotting:
+
+* Adding noise works for frequent values and lack of precision, but does not work for many observations.
+* Faceting can help with all three causes depending on the data.
+* Adding transparency almost always helps.
+* Binning the data or adding summaries doesn't add much clarity for frequent values or lack of precision, but is essential for very large data sets.
+* Sampling is also a useful tool when interested in general trends, but sampling can obscure anomalies, rare events, and uncommon relationships.
+
+-----
+
+# Wide Data
+
+Techniques for visualizing wide data, and dimension reduction more broadly, are far less settled in the literature. 
+
+-----
+
+### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+
+Approach 1: parallel coordinate plots (Inselberg 1985)
+
+<font color="#55b748">Step 1:</font> Install and load the `GGally` package. 
+
+<font color="#55b748">Step 2:</font> Install and load the `palmerpenguins` package. 
+
+<font color="#55b748">Step 3:</font> Pipe (`%>%`) the data into `ggparcoord(columns = 2:5)`.
+
+<font color="#55b748">Step 4:</font> Add `alphaLines = 0.3` inside of `ggparcoord()`.
+
+<font color="#55b748">Step 5:</font> Add `groupColumn = 1` inside of `ggparcoord()`.
+
+-----
+
+### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+
+Approach 2: scatterplot matrices (Carr 1985)
+
+<font color="#55b748">Step 1:</font> Install and load the `GGally` package. 
+
+<font color="#55b748">Step 2:</font> Use `select(cty, hwy, year, fl, displ)` to pick a subset of variables from the `mpg` data set. **Warning:** This function will crash R if too many variables are included. 
+
+<font color="#55b748">Step 3:</font> Run `ggpairs()` on the subset of variables from `mpg`.
+
+-----
+
+### `r kableExtra::text_spec("Exercise 6", color = "#1696d2")`
+
+Here we have a data set with 493 votes from two years of the 114th Senate (2015-2017). The data set has 100 rows and 495 columns. An affirmative vote is `1`, a negative vote is `-1`, and an abstention is `0`. The data are from [Bradley Robinson](https://data.world/bradrobinson/us-senate-voting-records) and this example is based on an earlier analysis by Professor Sivan Leviyang. 
+
+<font color="#55b748">Step 1:</font> Load the votes data with
+
+```
+votes <- read_csv(here::here("data", "votes.csv"))
+
+```
+
+<font color="#55b748">Step 2:</font> Run PCA with the following code
+
+```{r eval = FALSE}
+# select the numeric variables
+votes_numeric <- votes %>%
+  select_if(is.numeric)
+
+# run PCA
+votes_pca <- prcomp(votes_numeric)
+
+# extract the principle components
+votes_pcs <- votes_pca %>%
+  .$x %>%
+  as_tibble()
+
+# combine the pcs to the names and parties
+votes_pcs <- bind_cols(
+  select(votes, name, party),
+  votes_pcs
+)
+
+summary(votes_pca)
+
+```
+
+<font color="#55b748">Step 3:</font> Use `x = PC1`, `y = PC2`, and `geom_point()` to plot the data. 
+
+<font color="#55b748">Step 4:</font> Add `party` as color. Try labeling a few individual observations with `geom_text()`. 
+
+<font color="#55b748">Step 5:</font> Add `x` and `y` labels that include the proportion of variation explained by each PC. 
+
+```{r include = FALSE, eval = FALSE}
+# plot the data
+names <- c("Bernie Sanders", "Ted Cruz", "Joe Manchin", "Susan Collins")
+
+ggplot() +
+  geom_point(
+    data = votes_pcs, aes(PC1, PC2, color = party),
+    alpha = 0.5
+  ) +
+  geom_text(
+    data = filter(votes_pcs, name %in% names), 
+    aes(PC1, PC2, label = name)
+  ) +
+  scale_color_manual(values = c("blue", "#228B22", "red")) +
+  labs(
+    title = "PC1 and PC2 of 114th Senate Votes",
+    x = "PC1 (0.63 of Variation)",
+    y = "PC2 (0.05 of Variation)"
+  ) +
+  guides(text = NULL)
+
+```
+
+PCA performs linear dimension reduction. Observations are projected on to a line, plane, or hyperplane. There are non-linear dimension reduction techniques like UMAP, which projects observations on to manifolds, but there techniques are much more difficult to use and are difficult to communicate. 
+
+Other techniques for wide data include but are not limited to:
+
+* t-Distributed Stochastic Neighbor Embedding (t-SNE) (Maaten and Hinton, 2008)
+* Uniform Manifold Approximation and Projection (UMAP) (Mciness et al., 2018)
+* Grand tours (Asimov, 1985)
+* Rotating plots (Cook and Miller, 2006)
+
+-----
+
+### Wide Data Summary
+
+Wide data are an even more challenging issue than overplotting. We've seen two options for visualizing many dimensions directly and we've explored one tool for dimension reduction. 
+
+* Parallel coordinate plots
+* Pairwise comparison plots
+* Dimension reduction
+  * PCA
+  * t-SNE and UMAP
+
+**Suggestion**
+
+* If you have fewer than 50 variables, then look at relationships between variables and build up to a larger model of relationships. 
+* If you have 50 or more variables, then start with dimension reduction and then unpack the important relationships from the dimension reduction. 

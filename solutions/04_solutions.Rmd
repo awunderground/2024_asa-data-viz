@@ -1,0 +1,168 @@
+---
+title: "Visualizing Big Data"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+    css: !expr here::here("www", "web_report.css")
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+theme_set(theme_minimal())
+
+```
+
+## Exercise 1
+
+```{r}
+mpg %>%
+  ggplot() +
+  geom_point(mapping = aes(x = cyl, y = hwy))
+
+nrow(mpg)
+
+mpg %>%
+  ggplot() +
+  geom_jitter(
+    mapping = aes(x = cyl, y = hwy),
+    width = 0.2, 
+    height = 0
+  )
+
+```
+
+## Exercise 2
+
+```{r}
+# size
+diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point(size = 0.5)
+
+# shape
+diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point(shape = 1)
+
+# transparency
+diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point(alpha = 0.05)
+
+# faceting
+diamonds %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  facet_wrap(~ cut)
+
+# sampling
+diamonds %>% 
+  slice_sample(n = 1000) %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point()
+
+```
+
+## Exercise 3
+
+```{r}
+diamonds %>% 
+  ggplot(aes(x = carat, y = price)) +
+  geom_hex(bins = 60)
+
+diamonds %>% 
+  ggplot(aes(x = carat, y = price)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth()
+
+```
+
+## Exercise 4
+
+```{r}
+library(GGally)
+
+penguins %>%
+  select(-island, -sex, -year) %>%
+  drop_na() %>%
+  ggparcoord(columns = 2:5, alphaLines = 0.3, groupColumn = 1)
+
+```
+
+## Exercise 5
+
+```{r}
+library(GGally)
+
+mpg %>%
+  select(cty, hwy, year, fl, displ) %>%
+  ggpairs()
+
+```
+
+## Exercise 6
+
+```{r}
+votes <- read_csv(here::here("data", "votes.csv"))
+
+# select the numeric variables
+votes_numeric <- votes %>%
+  select_if(is.numeric)
+
+# run PCA
+votes_pca <- prcomp(votes_numeric)
+
+# extract the principle components
+votes_pcs <- votes_pca$x %>%
+  as_tibble()
+
+# combine the pcs to the names and parties
+votes_pcs <- bind_cols(
+  select(votes, name, party),
+  votes_pcs
+)
+
+summary(votes_pca)
+
+```
+
+```{r}
+votes_pcs %>%
+  ggplot() +
+  geom_point(aes(x = PC1, y = PC2, color = party))  +
+  coord_fixed() +
+  labs(
+    x = "PC1 (0.63 variation explained)",  
+    y = "PC2 (0.05 variation explained)"
+  )
+
+```
+
+```{r}
+# plot the data
+names <- c("Bernie Sanders", "Ted Cruz", "Joe Manchin", "Susan Collins")
+
+ggplot() +
+  geom_point(
+    data = votes_pcs, aes(PC1, PC2, color = party),
+    alpha = 0.5
+  ) +
+  geom_text(
+    data = filter(votes_pcs, name %in% names), 
+    aes(PC1, PC2, label = name)
+  ) +
+  scale_color_manual(values = c("blue", "#228B22", "red")) +
+  labs(
+    title = "PC1 and PC2 of 114th Senate Votes",
+    x = "PC1 (0.63 of Variation)",
+    y = "PC2 (0.05 of Variation)"
+  ) +
+  guides(text = NULL)
+
+
+```

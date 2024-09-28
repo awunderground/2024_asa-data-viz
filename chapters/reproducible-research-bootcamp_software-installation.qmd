@@ -1,0 +1,62 @@
+---
+title: "Software Requirements"
+format: pdf
+urlcolor: blue
+---
+
+I am looking forward to the [Reproducible Research Bootcamp](https://ww3.aievolution.com/JSMAnnual2024/Events/viewEv?ev=5127) at [JSM 2024](https://ww2.amstat.org/meetings/jsm/2024/). I use the tools we will cover in the course every day and I think they are essential for statistics and data science.
+
+::: {.callout-tip}
+The training will be more successful if you install R, RStudio, and Git before the day of the course. Please follow these instructions to install the software. **Some of the software may require administrative permissions to install.** 
+
+If you have any issues, please don't hesitate to email me at aaronrwilliams100@gmail.com.
+:::
+
+# Installing R and RStudio
+
+R is an open source statistical programming language. RStudio is an Integrated Development Environment (IDE) for developing R code. RStudio is developed by the for-profit company Posit. Don't worry, you don't need to pay any money for this software. 
+
+## Windows
+
+### R
+
+1) Navigate to the [CRAN website](https://cran.rstudio.com/).
+2) Click "Download R for Windows"
+3) Click "base"
+4) Click "Download R 4.4.1 for Windows"
+5) Follow the installation instructions. Accept all defaults and install R.
+
+### RStudio
+
+1) Navigate to the [RStudio website](https://www.rstudio.com/products/rstudio/).
+2) Download the RStudio Desktop installer for Windows. It should be something similar to "RStudio-2024.04.2-764.exe".
+3) Follow the installation instructions. Accept all defaults and install RStudio.
+4) Open RStudio. If successful, then R and RStudio are installed.
+
+## Mac
+
+### R
+
+1) Navigate to the [CRAN website](https://cran.rstudio.com/).
+2) Click "Download R for (Mac) OS X"
+3) Select the .pkg link under "Latest Release" that corresponds with your chip type (Apple silicon or Intel). 
+4) Follow the installation instructions. Accept all defaults and install R.
+
+### RStudio
+
+1) Navigate to the [RStudio website](https://www.rstudio.com/products/rstudio/).
+2) Download the RStudio Desktop installer. It should be something similar to "RStudio-2024.04.2-764.dmg".
+3) Follow the installation instructions. Accept all defaults and install RStudio.
+4) Open RStudio. If successful, then R and RStudio are installed.
+
+# Installing Git
+
+1. Open RStudio and select "Terminal" in the bottom left. Type `which git` and hit enter. If you see a filepath like `## /usr/bin/git` then you don't need to follow any more steps. 
+2. If you see a message like `git: command not found`, then follow [these instructions](https://happygitwithr.com/install-git). 
+3. Go back to step 1. and confirm Git is installed using the Terminal in RStudio.
+
+# More materials
+
+::: {.callout-tip}
+The rest of the materials for the course will be available at [this URL](https://github.com/awunderground/2024-08-03_reproducible-research-bootcamp) a few days before the start of the course.
+:::

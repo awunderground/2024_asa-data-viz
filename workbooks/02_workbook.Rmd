@@ -1,0 +1,94 @@
+---
+title: "Grammar of Graphics"
+author: "Aaron R. Williams"
+output:
+  html_document:
+    code_folding: hide
+    toc: TRUE
+    toc_float: TRUE
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+
+```
+
+## Exercise 1
+
+Created a scatter plot that shows the relationship between pressure and wind.
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 2
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 3
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 4
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 5
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 6
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 7
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 8
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 9
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Exercise 10
+
+```{r}
+# YOUR WORK GOES HERE
+
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
