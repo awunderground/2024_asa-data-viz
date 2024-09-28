@@ -1,24 +1,23 @@
 ---
 title: "Data Munging for Data Visualization"
 author: "Aaron R. Williams"
-output:
-  html_document:
-    code_folding: show
-    toc: TRUE
-    toc_float: TRUE
-    css: !expr here::here("www", "web_report.css")
-editor_options:
+format: 
+  html: 
+    code-line-numbers: true
+    self-contained: true
+    toc: true
+execute: 
+  warning: false
+  message: false
+editor_options: 
   chunk_output_type: console
 ---
 
-```{css echo=FALSE}
-h1 {
-    font-size: 34px;
-    color: #337AB7;
-}
-p {
-    margin: 20px 0 20px;
-}
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
 ```
 
 ```{r message = FALSE, warning = FALSE}
@@ -157,7 +156,16 @@ tribble(
 
 ```
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Tidy the following data:
 
@@ -171,7 +179,18 @@ tribble(
 
 ```
 
-### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+:::
+
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Tidy the following data:
 
@@ -185,7 +204,18 @@ tribble(
 
 ```
 
-### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+:::
+
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Suppose we want to create a column chart with only female passengers. Furthermore, we want `n` on the x-axis and we want `Class` on the y-axis with the levels going from 1st to 3rd from top to bottom.
 
@@ -199,6 +229,8 @@ Suppose we want to create a column chart with only female passengers. Furthermor
   mutate(Class = factor(Class, levels = c("3rd class", "2nd class", "1st class"))) %>%
 
 ```
+
+:::
 
 ## Additional tools
 

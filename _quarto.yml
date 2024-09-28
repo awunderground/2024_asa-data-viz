@@ -15,9 +15,9 @@ book:
         - chapters/03_five-guidelines.qmd
     - part: Special Topics
       chapters:
-        - chapters/04_big-data.Rmd
-        - chapters/05_linear-regression.Rmd
-        - chapters/06_data-munging.Rmd
+        - chapters/04_big-data.qmd
+        - chapters/05_linear-regression.qmd
+        - chapters/06_data-munging.qmd
         - chapters/07_time-series.qmd
     - part: Additional Resources
       chapters:

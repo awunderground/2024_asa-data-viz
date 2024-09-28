@@ -1,6 +1,5 @@
 ---
 title: "Grammar of Graphics"
-subtitle: "Introduction to the R Programming Language"
 author: "Aaron R. Williams"
 format: 
   html: 
@@ -12,14 +11,11 @@ execute:
   message: false
 ---
 
-```{css echo=FALSE}
-h1 {
-    font-size: 34px;
-    color: #1696d2;
-}
-p {
-    margin: 20px 0 20px;
-}
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
 ```
 
 # The Tidy Approach
@@ -75,15 +71,28 @@ There are <font color="#ec008b">**eight**</font> main ingredients to the grammar
 
 -----
 
-### `r kableExtra::text_spec("Exercise 0", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
 
 <font color="#55b748">Step 1:</font> Open `2024_asa-data-viz.Rproj`.
 
 <font color="#55b748">Step 2:</font> Open `02_workbook.Rmd`. 
 
+:::
+
 -----
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> **Type** (don't copy & paste) the following code below `library(tidyverse)` in the new chunk where it says `# YOUR WORK GOES HERE`.
 
@@ -97,6 +106,8 @@ ggplot(data = storms) +
 <font color="#55b748">Step 2:</font> Add a comment above the ggplot2 code that describes the plot we created. 
 
 <font color="#55b748">Step 3:</font> As we progress, add comments below the data visualization code that describe the argument or function that corresponds to each of the first three components of the grammar of graphics.
+
+:::
 
 -----
 
@@ -231,7 +242,16 @@ recent_storms %>%
 
 -----
 
-### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Duplicate the code from exercise 1. Inside `aes()`, add 
 `color = category`. Run the code.
@@ -242,11 +262,22 @@ recent_storms %>%
 
 <font color="#55b748">Step 4:</font> This is a little cluttered. Add `alpha = 0.2` inside `geom_point()` but outside of `aes()`.
 
+:::
+
 Aesthetic mappings like x and y almost always vary with the data. Aesthetic mappings like color, fill, shape, transparency, and size can vary with the data. But those arguments can also be added as styles that don't vary with the data. If you include those arguments in `aes()`, they will show up in the legend (which can be annoying! and is also a sign that something should be changed!).
 
 -----
 
-### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Create a new scatter plot using the `msleep` data set. Use `bodywt` on the x-axis and `sleep_total` on the y-axis. 
 
@@ -255,6 +286,8 @@ Aesthetic mappings like x and y almost always vary with the data. Aesthetic mapp
 <font color="#55b748">Step 3:</font> The x-axis is clustered near zero. Add `scale_x_log10()` above `scale_y_continuous(limits = c(0, NA))`.
 
 <font color="#55b748">Step 4:</font> Add and run `options(scipen = 999)`. Rerun the code from steps 1-3.
+
+:::
 
 -----
 
@@ -336,7 +369,16 @@ recent_storms50 %>%
 
 -----
 
-### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Type the following code in your script. 
 
@@ -349,6 +391,8 @@ ggplot(data = data) +
 <font color="#55b748">Step 2:</font> Add `coord_polar()` to your plot.
 
 <font color="#55b748">Step 3:</font> Add `labs(title = "Polar coordinate system")` to your plot.
+
+:::
 
 -----
 
@@ -373,11 +417,22 @@ tibble(x = 1:100,
 
 -----
 
-### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Create a scatter plot of the `storms` data set with `pressure` on the x-axis and `wind` on the y-axis. 
 
 <font color="#55b748">Step 2:</font> Add `facet_wrap(~ month)`
+
+:::
 
 -----
 
@@ -417,7 +472,16 @@ storms %>%
 
 -----
 
-### `r kableExtra::text_spec("Exercise 6", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Add the following code to your script. Submit it!
 
@@ -425,6 +489,8 @@ storms %>%
 ggplot(storms) +
   geom_bar(mapping = aes(x = category))
 ```
+
+:::
 
 -----
 
@@ -436,11 +502,22 @@ Before transformations, each observation in data is represented by one geometric
 
 -----
 
-### `r kableExtra::text_spec("Exercise 7", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Duplicate Exercise 6.
 
 <font color="#55b748">Step 2:</font> Add `theme_minimal()` to the plot.
+
+:::
 
 ### Themes
 
@@ -504,7 +581,16 @@ If you prefer the minimal theme, you can add `theme_minimal()` to each visualiza
 
 -----
 
-### `r kableExtra::text_spec("Exercise 8 (layers!)", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Add the following exercise to you script. Run it!
 
@@ -519,11 +605,22 @@ storms %>%
 
 <font color="#55b748">Step 2:</font> Add `geom_point(mapping = aes(x = year, y = n))` after `geom_line()`.
 
+:::
+
 <font color="#ec008b">**Layers**</font> allow for multiple geometric objects to be plotted in the same data visualization.
 
 -----
 
-### `r kableExtra::text_spec("Exercise 9", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Add the following exercise to you script. Run it!
 
@@ -533,19 +630,32 @@ ggplot(data = storms, mapping = aes(x = pressure, y = wind)) +
   geom_smooth()
 ```
 
+:::
+
 <font color="#ec008b">**Inheritances**</font> pass aesthetic mappings from `ggplot()` to later `geom_*()` functions.
 
 *Notice how the aesthetic mappings are passed to* `ggplot()` *in example 9. This is useful when using layers!*
 
 -----
 
-### `r kableExtra::text_spec("Exercise 10", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Pick your favorite plot from exercises 1 through 9 and duplicate it in a new code chunk. 
 
 <font color="#55b748">Step 2:</font> Add `ggsave(filename = "favorite-plot.png")` and then look at the saved file. 
 
 <font color="#55b748">Step 3:</font> Add `width = 6` and `height = 4` to `ggsave()`.
+
+:::
 
 -----
 

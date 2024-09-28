@@ -1,6 +1,5 @@
 ---
 title: "Introduction and Motivation"
-subtitle: "Introduction to the Data Visualization with R"
 author: "Aaron R. Williams"
 format: 
   html: 
@@ -10,6 +9,13 @@ execute:
   warning: false
   message: false
 ---
+
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
+```
 
 # Introductions
 
@@ -158,10 +164,21 @@ More commonly, documents are knitted. This runs all of the code in the .Rmd in a
 
 Click ![](images/knit.png){width=20%} when a .Rmd document is open in RStudio to knit the document.
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Open RStudio by double-clicking `2024_asa-data-viz.Rproj`
 
 <font color="#55b748">Step 2:</font> Open `02_workbook.Rmd` in RStudio. Make sure it is in `2024_asa-data-viz.Rproj`. That is, you should not see `Project: (None)` in the top right of RStudio.
 
 <font color="#55b748">Step 3:</font> Click knit!
+
+:::

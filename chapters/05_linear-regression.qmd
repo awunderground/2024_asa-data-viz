@@ -1,24 +1,23 @@
 ---
 title: "Data Viz and Regression in R"
 author: "Aaron R. Williams"
-output:
-  html_document:
-    code_folding: show
-    toc: TRUE
-    toc_float: TRUE
-    css: !expr here::here("www", "web_report.css")
-editor_options:
+format: 
+  html: 
+    code-line-numbers: true
+    self-contained: true
+    toc: true
+execute: 
+  warning: false
+  message: false
+editor_options: 
   chunk_output_type: console
 ---
 
-```{css echo=FALSE}
-h1 {
-    font-size: 34px;
-    color: #1696d2;
-}
-p {
-    margin: 20px 0 20px;
-}
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
 ```
 
 ```{r message = FALSE, warning = FALSE, echo = FALSE}
@@ -182,7 +181,16 @@ augment(stopping_model)
 
 A residual plot compares fitted values and residuals. It is a useful diagnostic to see if there are non-linear patterns that are not captured by the model and to check for constant error variance.
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Let's estimate a model using a subset of the diamonds data set and then create a residual plot. 
 
@@ -209,6 +217,8 @@ class(diamonds_model1)
 <font color="#55b748">**Step 2:**</font> Use `augment()` to create a data frame with one row per observation in the training data. 
 
 <font color="#55b748">**Step 3:**</font> Create a scatter plot to compare `.fitted` and `.resid`. Add `geom_smooth()`. 
+
+:::
 
 -----
 
@@ -248,7 +258,16 @@ diamonds_model1_coefs %>%
 
 -----
 
-### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Let's estimate a second regression model on the `diamonds` data set and then compare the models with a coefficient plot. 
 
@@ -268,6 +287,8 @@ models_coefs <- bind_rows(
 <font color="#55b748">**Step 3:**</font> Create a coefficient plot with `models_coefs`. Include `color = model`.
 
 <font color="#55b748">**Step 4:**</font> Add `position = position_dodge(width = 0.5)` to `geom_pointrange()`. 
+
+:::
 
 -----
 
@@ -355,7 +376,16 @@ bind_rows(
 
 ```
 
-### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">**Step 1:**</font> Like above, estimate many models on the `diamonds` data set. Group by color. You will need to list columns in the `nest()` functions. Use `formula = price ~ carat + cut`.
 
@@ -364,6 +394,8 @@ bind_rows(
 <font color="#55b748">**Step 3:**</font> Visualize the $R^2$ with a scatter plot with `r_squared` on the x axis and `color` on the y axis.
 
 <font color="#55b748">**Step 4:**</font> Add `scale_x_continuous(limits = c(0, 1))`.
+
+:::
 
 -----
 
@@ -473,7 +505,16 @@ ggplot() +
 
 -----
 
-### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 This example will demonstrate plotting predicted probabilities for a simple logistic regression model.
 
@@ -505,6 +546,8 @@ models <- data_grid(cars, speed = seq_range(speed, 1000)) %>%
 ```
 
 <font color="#55b748">**Step 6:**</font> Plot the predicted probabilities for the linear probability model and logistic regression model. I used three layers: `geom_point()`, `geom_line()` with `y = lm`, and `geom_line()` with `y = glm`.
+
+:::
 
 # Summary
 

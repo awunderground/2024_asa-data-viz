@@ -1,6 +1,5 @@
 ---
 title: "Jon Schwabish's Five Guidelines in R"
-subtitle: "Introduction to the R Programming Language"
 author: "Aaron R. Williams"
 format: 
   html: 
@@ -11,14 +10,11 @@ execute:
   message: false
 ---
 
-```{css echo=FALSE}
-h1 {
-    font-size: 34px;
-    color: #1696d2;
-}
-p {
-    margin: 20px 0 20px;
-}
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
 ```
 
 ## Better Data Visualizations
@@ -35,7 +31,16 @@ Schwabish focuses on communications, but this rule holds true for analysis too. 
 
 -----
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Copy-and-paste the following code to get the Anscombe's quartet data: 
 
@@ -71,6 +76,8 @@ tidy_anscombe <-
 <font color="#55b748">Step 3:</font> Facet wrap the plot based on `quartet`. The plot should have four panels with lines with identical slopes and intercepts. 
 
 <font color="#55b748">Step 4:</font> Add `geom_point()`.
+
+:::
 
 The four data sets have identical mean and sample variance for x, and nearly identical mean of y, sample variance of y, correlation between x and y, regression line, and coefficient of determination. 
 
@@ -114,7 +121,16 @@ knitr::include_graphics(here::here("chapters", "images", "titanic-3d-1.png"))
 
 -----
 
-### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Copy-and-paste the following data into your exercise document. 
 
@@ -134,6 +150,8 @@ titanic <- tribble(
 
 <font color="#55b748">Step 2:</font> Recreate the 3D plot in 2D. 
 
+:::
+
 -----
 
 # Guideline 3: Integrate the Graphics and Text
@@ -146,7 +164,16 @@ titanic <- tribble(
 
 -----
 
-### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Duplicate the titanic example from above. 
 
@@ -154,9 +181,20 @@ titanic <- tribble(
 
 <font color="#55b748">Step 3:</font> Add the sources of the data with `caption = "Data from library(titanic)"` in `labs()`. 
 
+:::
+
 -----
 
-### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 [`library(ggtext)`](https://github.com/wilkelab/ggtext) is a useful library for extending text functionality in ggplot2. 
 
@@ -187,6 +225,8 @@ titanic <- tribble(
 ```
 
 <font color="#55b748">Step 6:</font> Add `guides(fill = "none")` to remove the legend. 
+
+:::
 
 **Tip:** I found [this solution](https://stackoverflow.com/questions/49735290/ggplot2-color-individual-words-in-title-to-match-colors-of-groups) by Googling "add color in ggplot2 title".
 
@@ -323,7 +363,16 @@ gapminder %>%
 
 -----
 
-### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">Step 1:</font> Install and load the `gghighlight` package and `gapminder` package.
 
@@ -363,3 +412,5 @@ data <- gapminder %>%
 ```
 
 <font color="#55b748">Step 5:</font> Suppose we want to highlight the two best-performing counties. We could add a new variable and tinker with the colors or we can use `library(gghighlight)`. Switch `group` to `color` in you existing code and add `gghighlight(max(pcgdp_change) > 35000)`.
+
+:::

@@ -1,6 +1,5 @@
 ---
 title: "Time Series and Annotations in R"
-subtitle: "Introduction to the R Programming Language"
 author: "Aaron R. Williams"
 format: 
   html: 
@@ -14,14 +13,11 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{css echo=FALSE}
-h1 {
-    font-size: 34px;
-    color: #1696d2;
-}
-p {
-    margin: 20px 0 20px;
-}
+```{r}
+#| echo: false
+
+exercise_number <- 0
+
 ```
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
@@ -92,7 +88,16 @@ Fortunately, if you encode your dates or date-times correctly, then `library(lub
 
 -----
 
-### `r kableExtra::text_spec("Exercise 1", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 ```{r}
 dates <- tribble(
@@ -107,6 +112,8 @@ dates <- tribble(
 <font color="#55b748">**Step 1:**</font> Create the `dates` data from above with `tribble()`.
 
 <font color="#55b748">**Step 2:**</font> Use `mutate()` to convert the `date` column to the ISO 8601 standard.
+
+:::
 
 -----
 
@@ -158,11 +165,22 @@ rates %>%
   
 ```
 
-### `r kableExtra::text_spec("Exercise 2", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">**Step 1:**</font> Recreate the simple line plot of the U3 unemployment rate. Set the color of the line to blue. 
 
 <font color="#55b748">**Step 2:**</font> Add a second layer with a line with the U6 unemployment rate. Set the color of the line to red.
+
+:::
 
 # Pivoting
 
@@ -212,7 +230,16 @@ rates %>%
 **Note:** `pivot_longer()` and `pivot_wider()` replace older functions like `gather()`/`spread()` and `melt()`/`cast()`.
 
 
-### `r kableExtra::text_spec("Exercise 3", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Consider this plot of the upper-bound of the Federal Funds Rate target. Note how we use `geom_step()` because we want a stepwise plot instead of straight-line interpolation between observations. 
 
@@ -275,6 +302,8 @@ fed_funds_rate %>%
 
 <font color="#55b748">**Step 3:**</font> Create a plot similar to the above plot with one line for the upper limit and one line for the lower limit.
 
+:::
+
 # Shading
 
 It is useful to shade regions on a time series plot to show events or periods like recessions. 
@@ -335,13 +364,24 @@ recessions %>%
 
 ```
 
-### `r kableExtra::text_spec("Exercise 4", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">**Step 1:**</font> Recreate the first plot with the U3 unemployment rate. 
 
 <font color="#55b748">**Step 2:**</font> Use `filter()` to filter the recessions data to `Peak >= "1950-01-01"`. 
 
 <font color="#55b748">**Step 3:**</font> Add recessions shading to the plot with `geom_rect()` as a new layer. 
+
+:::
 
 # Annotations
 
@@ -382,11 +422,22 @@ ames %>%
 
 ```
 
-### `r kableExtra::text_spec("Exercise 5", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">**Step 1:**</font> Duplicate your code from the previous exercise.
 
 <font color="#55b748">**Step 2:**</font> Use `annotate()` to add a text annotation for the recession during the start of the COVID-19 pandemic.
+
+:::
 
 # Adding trend lines
 
@@ -426,7 +477,16 @@ ggplot() +
 
 Instead of using `geom_abline()`, we could have used `broom()` or `predict()` and added a second layer with `geom_line()`. 
 
-### `r kableExtra::text_spec("Exercise 6", color = "#1696d2")`
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 <font color="#55b748">**Step 1:**</font> Duplicate the above example. 
 
@@ -435,6 +495,8 @@ Instead of using `geom_abline()`, we could have used `broom()` or `predict()` an
 <font color="#55b748">**Step 3:**</font> Add the 2021 trend line as a new layer.
 
 <font color="#55b748">**Step 4:**</font> Use `scale_x_date()` to extend the limits to include the intersection of the trend lines. Hint: You set the limits with `limits = c(???, ???)` where the first value is the minimum and second value is the maximum. In this case, you will need to wrap the limits in `as_date()`.
+
+:::
 
 # Adding forecasts
 
@@ -592,9 +654,16 @@ ggplot() +
 
 ```
 
-## Final exercise: telework during the pandemic
+::: callout
 
-### `r kableExtra::text_spec("Exercise 7", color = "#1696d2")`
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
 
 Let's recreate [another interesting Ben Casselman data viz](https://twitter.com/bencasselman/status/1456604915585982467). This one is about remote work. The data visualization uses a new variable in the CPS called `COVIDTELEW`, which asks if respondents "Worked remotely for pay due to COVID-19 pandemic".
 
@@ -611,3 +680,5 @@ labels <- remote %>%
 ```
 
 <font color="#55b748">**Step 3:**</font> Recreate the plot from Ben Casselman's tweet. You may need to tinker with `scale_x_date()`. 
+
+:::
