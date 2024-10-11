@@ -38,11 +38,11 @@ dates <- tribble(
 ```{r}
 # https://fred.stlouisfed.org/series/UNRATE
 # accessed on 2021-11-19
-u3_rate <- read_csv("UNRATE.csv")
+u3_rate <- read_csv(here("data", "UNRATE.csv"))
 
 # https://fred.stlouisfed.org/series/U6RATE
 # accessed on 2021-11-19
-u6_rate <- read_csv("U6RATE.csv")
+u6_rate <- read_csv(here("data", "U6RATE.csv"))
 
 # combine the U3 and U6 data
 rates <- left_join(u3_rate, u6_rate, by = "DATE")
@@ -184,7 +184,7 @@ rates %>%
 # https://fred.stlouisfed.org/series/PAYEMS
 # accessed on 2021-11-19
 
-payrolls <- read_csv(here("day03", "data", "PAYEMS.csv")) %>%
+payrolls <- read_csv(here("data", "PAYEMS.csv")) %>%
   mutate(PAYEMS = PAYEMS / 1000)
 
 # filter to pre-pandemic data for model estimation
@@ -229,7 +229,7 @@ ggplot() +
 ## Exercise 7
 
 ```{r}
-remote <- read_csv(here("day03", "data", "remote-work.csv"))
+remote <- read_csv(here("data", "remote-work.csv"))
 
 labels <- remote %>%
   slice_max(date) %>%
