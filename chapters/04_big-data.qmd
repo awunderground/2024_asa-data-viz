@@ -16,7 +16,7 @@ editor_options:
 ```{r}
 #| echo: false
 
-exercise_number <- 0
+exercise_number <- 1
 
 ```
 
@@ -26,7 +26,7 @@ theme_set(theme_minimal())
 
 ```
 
-# Big Data
+## Big Data
 
 Our examples thus far have focused on data sets with a modest number of observations and variables. Larger data sets can create new challenges. 
 
@@ -86,7 +86,7 @@ tibble(m = 2:200) %>%
 
 -----
 
-# Overplotting
+## Overplotting
 
 ::: callout
 
@@ -226,7 +226,7 @@ We've explored some solutions to overplotting, but the right solution depends on
 
 -----
 
-# Wide Data
+## Wide Data
 
 Techniques for visualizing wide data, and dimension reduction more broadly, are far less settled in the literature. 
 

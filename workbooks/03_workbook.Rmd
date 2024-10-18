@@ -42,6 +42,12 @@ tidy_anscombe <-
 
 ## YOUR CODE GOES HERE
 
+tidy_anscombe |>
+  ggplot(mapping = aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ quartet)
+
 ```
 
 ## Exercise 2

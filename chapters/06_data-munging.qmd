@@ -16,7 +16,7 @@ editor_options:
 ```{r}
 #| echo: false
 
-exercise_number <- 0
+exercise_number <- 1
 
 ```
 
@@ -50,7 +50,9 @@ table1
 
 ```
 
-## Untidy table2 {.tabset}
+## Untidy table2 
+
+::: {.panel-tabset}
 
 ### Untidy
 
@@ -71,7 +73,11 @@ table2 %>%
 
 ```
 
-## Untidy table3 {.tabset}
+:::
+
+## Untidy table3
+
+::: {.panel-tabset}
 
 ### Untidy
 
@@ -96,7 +102,11 @@ table3 %>%
 
 ```
 
-## Untidy table4 {.tabset}
+:::
+
+## Untidy table4
+
+::: {.panel-tabset}
 
 ### Untidy
 
@@ -137,6 +147,8 @@ left_join(
 )
 
 ```
+
+:::
 
 ## Titanic Data
 

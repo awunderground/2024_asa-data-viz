@@ -56,7 +56,7 @@ titanic <- tribble(
 )
 
 titanic %>%
-  ggplot(mapping = aes(Class, n, fill = Sex)) + 
+  ggplot(mapping = aes(x = Class, y = n, fill = Sex)) + 
   geom_col() +
   labs(
     title = "Titanic Deaths were Concentrated in 3rd Class", 
@@ -160,14 +160,14 @@ data <- gapminder %>%
   mutate(pcgdp_change = cumsum(pcgdp_change))
 
 data %>%
-  ggplot(mapping = aes(x = year, y = pcgdp_change, group = country)) +
+  ggplot(mapping = aes(x = year, y = pcgdp_change, color = country)) +
   geom_line() 
 
 
 data %>%
   ggplot(mapping = aes(x = year, y = pcgdp_change, color = country)) +
   geom_line() +
-  gghighlight(max(pcgdp_change) < 35000) +
+  gghighlight(max(pcgdp_change) > 35000) +
   scale_x_continuous(
     expand = expansion(mult = c(0.002, 0)),
     breaks = c(seq(1950, 2010, 10)),

@@ -18,7 +18,7 @@ exercise_number <- 0
 
 ```
 
-# The Tidy Approach
+## The Tidy Approach
 
 ### Opinionated software
 
@@ -51,9 +51,7 @@ The tidy approach to data science is powerful because it breaks data work into t
 
 By standardizing the data structure for most community-created tools, the framework oriented diffuse development and reduced the friction of data work. 
 
------
-
-# Grammar of Graphics
+## Grammar of Graphics
 
 ```{r setup}
 #| echo: false
@@ -85,6 +83,13 @@ There are <font color="#ec008b">**eight**</font> main ingredients to the grammar
 
 ::: callout
 
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
+
 #### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
 
 ```{r}
@@ -111,6 +116,7 @@ ggplot(data = storms) +
 
 -----
 
+::: {.callout-tip}
 <font color="#ec008b">**1 Data**</font> are the values represented in the visualization.
 
 `ggplot(data = )` or `data %>% ggplot()`
@@ -121,11 +127,15 @@ storms %>%
 
 ```
 
------
+:::
 
-<font color="#ec008b">**2 Aesthetic mappings**</font> are directions for how data are mapped in a plot in a way that we can perceive. Aesthetic mappings include linking variables to the x-position, y-position, color, fill, shape, transparency, and size. 
+::: {.callout-tip}
+
+<font color="#ec008b">**2 Aesthetic mappings**</font> are directions for how variables from the data are mapped to visual elements in the data visualization. Aesthetic mappings show variation in the data through variation in the data visualization. Aesthetic mappings include linking variables to the x-position, y-position, color, fill, shape, transparency, and size. 
 
 `aes(x = , y = , color = )`
+
+:::
 
 **X or Y**
 
@@ -196,11 +206,13 @@ recent_storms %>%
 
 **Others:** transparency, line type
 
------
+::: {.callout-tip}
 
 <font color="#ec008b">**3 Geometric objects**</font> are representations of the data, including points, lines, and polygons.
 
 *Plots are often called their geometric object(s).*
+
+:::
 
 `geom_bar()` or `geom_col()`
 
@@ -289,9 +301,14 @@ exercise_number <- exercise_number + 1
 
 :::
 
------
+::: {.callout-tip}
 
-<font color="#ec008b">**4 Scales**</font> turn data values, which are continuous, discrete, or categorical into aesthetic values. `scale_*_*()` functions control the specific behaviors of aesthetic mappings. This includes not only the x-axis and y-axis, but the ranges of sizes, types of shapes, and specific colors of aesthetics.
+<font color="#ec008b">**4 Scales**</font> control the exact behaviors of aesthetic mapping. `scale_*_*()` functions can change:
+
+- The range and labels on the x-axis and y-axis
+- The colors used for `color` and `fill`
+- The sizes of shapes
+- Shapes
 
 There are dozens of scale functions and their names follow a formula:
 
@@ -300,6 +317,8 @@ There are dozens of scale functions and their names follow a formula:
 * Finally, comes the type of variable or transformation (i.e. `discrete`, `continuous`, and `reverse`). 
 
 `scale_x_continuous()` and `scale_y_continuous()` are two popular `scale_*_*()` functions. 
+
+:::
 
 #### Before
 
@@ -394,9 +413,11 @@ ggplot(data = data) +
 
 :::
 
------
+::: {.callout-tip}
 
 <font color="#ec008b">**5 Coordinate systems**</font> map scaled geometric objects to the position of objects on the plane of a plot. The two most popular coordinate systems are the Cartesian coordinate system and the polar coordinate system.
+
+:::
 
 ```{r echo = FALSE}
 ggplot(storms, aes(pressure, wind)) +
@@ -434,9 +455,11 @@ exercise_number <- exercise_number + 1
 
 :::
 
------
+::: {.callout-tip}
 
 <font color="#ec008b">**6 Facets**</font> (optional) break data into meaningful subsets. `facet_wrap()`, `facet_grid()`, and `facet_geo()`.
+
+:::
 
 #### facet_wrap()
 
@@ -494,9 +517,13 @@ ggplot(storms) +
 
 -----
 
+::: {.callout-tip}
+
 <font color="#ec008b">**7 Statistical transformations**</font> (optional) transform the data, typically through summary statistics and functions, before aesthetic mapping.
 
 Before transformations, each observation in data is represented by one geometric object (i.e. a scatter plot). After a transformation, a geometric object can represent more than one observation (i.e. a bar in a histogram). 
+
+:::
 
 **Note:** `geom_bar()` performs statistical transformation. Use `geom_col()` to create a column chart with bars that encode individual observations in the data set. 
 
@@ -521,7 +548,11 @@ exercise_number <- exercise_number + 1
 
 ### Themes
 
+::: {.callout-tip}
+
 <font color="#ec008b">**8 Theme**</font> controls the visual style of plot with font types, font sizes, background colors, margins, and positioning.
+
+:::
 
 #### Default theme
 
@@ -607,7 +638,11 @@ storms %>%
 
 :::
 
-<font color="#ec008b">**Layers**</font> allow for multiple geometric objects to be plotted in the same data visualization.
+::: {.callout-tip}
+
+<font color="#ec008b">**Layers**</font> allow for distinct geometric objects and/or distinct data sets to be combined in the same data visualization.
+
+:::
 
 -----
 
@@ -632,7 +667,11 @@ ggplot(data = storms, mapping = aes(x = pressure, y = wind)) +
 
 :::
 
+::: {.callout-tip}
+
 <font color="#ec008b">**Inheritances**</font> pass aesthetic mappings from `ggplot()` to later `geom_*()` functions.
+
+:::
 
 *Notice how the aesthetic mappings are passed to* `ggplot()` *in example 9. This is useful when using layers!*
 

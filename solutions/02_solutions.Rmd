@@ -41,7 +41,7 @@ ggplot(data = storms) +
 
 # step 2
 ggplot(data = storms) + 
-  geom_point(mapping = aes(x = pressure, y = wind, color = "green"))
+  geom_point(mapping = aes(x = pressure, y = wind, color = "green eggs and ham"))
 
 # step 3
 ggplot(data = storms) + 
@@ -61,8 +61,8 @@ options(scipen = 999)
 
 ggplot(data = msleep) +
   geom_point(mapping = aes(x = bodywt, y = sleep_total)) +
-  scale_x_log10() +
   scale_y_continuous(limits = c(0, NA))
+  
 
 ```
 
@@ -117,7 +117,11 @@ count(storms, category) %>%
   ggplot() +
   geom_col(mapping = aes(x = category, y = n))
 
-count(storms, category, year)
+
+count(storms, category) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = category, y = n))
+
 
 
 ```
@@ -139,7 +143,7 @@ storms %>%
   distinct(name, year) %>%
   count(year) %>%
   ggplot() + 
-  geom_line(mapping = aes(x = year, y = n)) +
+  geom_line(mapping = aes(x = year, y = n), alpha = 0.5) +
   geom_point(mapping = aes(x = year, y = n))
 
 
@@ -151,6 +155,7 @@ storms %>%
 ggplot(data = storms, mapping = aes(x = pressure, y = wind)) + 
   geom_point() +
   geom_smooth()
+  
 
 centroids <- storms %>%
   group_by(category) %>%

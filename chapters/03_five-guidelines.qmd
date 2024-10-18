@@ -13,7 +13,7 @@ execute:
 ```{r}
 #| echo: false
 
-exercise_number <- 0
+exercise_number <- 1
 
 ```
 
@@ -23,7 +23,7 @@ exercise_number <- 0
 
 -----
 
-# Guideline 1: Show the Data
+## Guideline 1: Show the Data
 
 > "Your reader can only grasp your point, argument, or story if they see the data."
 
@@ -99,7 +99,7 @@ read_tsv(here::here("data", "DatasaurusDozen.tsv")) %>%
 
 -----
 
-# Guideline 2: Reduce the Clutter
+## Guideline 2: Reduce the Clutter
 
 > "The use of unnecessary visual elements distracts your reader from the central idea and clutters the page."
 
@@ -154,7 +154,7 @@ titanic <- tribble(
 
 -----
 
-# Guideline 3: Integrate the Graphics and Text
+## Guideline 3: Integrate the Graphics and Text
 
 1. Remove legends when possible and label data directly
 2. Write *active* titles like newspaper headlines
@@ -273,7 +273,7 @@ tribble(
 
 -----
 
-# Guideline 4: Avoid the Spaghetti Chart
+## Guideline 4: Avoid the Spaghetti Chart
 
 >"Sometimes we face the challenge of including lots of data in a single graph but we don't need to try to pack everything into a single graph. 
 
@@ -355,7 +355,7 @@ gapminder %>%
 ```
 -----
 
-# Guideline 5: Start with Gray
+## Guideline 5: Start with Gray
 
 >"Whenever you make a graph, start with all gray data elements. By doing so, you force yourself to be purposeful and strategic in your use of color, labels, and other elements."
 

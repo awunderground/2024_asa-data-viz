@@ -16,7 +16,7 @@ editor_options:
 ```{r}
 #| echo: false
 
-exercise_number <- 0
+exercise_number <- 1
 
 ```
 
@@ -40,9 +40,9 @@ This guide is a brief introduction to code for implementing and visually evaluat
 
 -----
 
-# 1. Create Models with `ggplot2`
+## 1. Create Models with `ggplot2`
 
-## `geom_smooth()`
+### `geom_smooth()`
 
 We've already seen `geom_smooth()`, which adds a LOESS regression line with fewer than 1,000 observations and smoothing regression splines with 1,000 or more observations. 
 
@@ -84,9 +84,9 @@ This final example is concise. It uses `log(x)` as a predictor but still shows t
 
 -----
 
-# 2. Use Base R to Explore `lm` Objects
+## 2. Use Base R to Explore `lm` Objects
 
-## `lm()`
+### `lm()`
 
 `lm()` fits linear regression models in R. Here is a simple linear regression model estimated on the `cars` data with stopping distance as the dependent variable and speed as the independent variable. 
 
@@ -103,7 +103,7 @@ The `lm()` function creates an object of class `"lm"`. Many R functions have con
 
 -----
 
-## `summary()`
+### `summary()`
 
 `summary()` returns a regression table with the call, a five number summary of the residuals, coefficient estimates, standard errors, t statistics, p-values, the residual standard error, $R^2$, adjusted $R ^ 2$, the F-statistic, and the p-value for the F-statistic. 
 
@@ -114,7 +114,7 @@ summary(stopping_model)
 
 -----
 
-## `coef()`
+### `coef()`
 
 For example, `coef()` returns the coefficients. 
 
@@ -125,7 +125,7 @@ coef(stopping_model)
 
 -----
 
-## `resid()`
+### `resid()`
 
 `resid()` can be used to select just a vector of the residuals. 
 
@@ -136,7 +136,7 @@ resid(stopping_model)[1:10]
 
 -----
 
-## `plot()`
+### `plot()`
 
 `plot()` will return four plots with regression diagnostics. 
 
@@ -154,11 +154,11 @@ plot(stopping_model)
 
 -----
 
-# 3. Extract Model Data with `broom`
+## 3. Extract Model Data with `broom`
 
 To leverage the full power of `ggplot2`, we need tidy data frames with our data of interest. `library(broom)` will quickly give us access to these data!
 
-## `library(broom)`
+### `library(broom)`
 
 `library(broom)` contains three helpful functions for tidying the output of estimated models. `library(broom)` is extensible and has methods for many models (`lm()`, `glm()`, `kmeans()`, `LDA()`). We will demonstrate applications with `lm()`:
 
@@ -168,7 +168,7 @@ To leverage the full power of `ggplot2`, we need tidy data frames with our data 
 
 -----
 
-### `augment()`
+#### `augment()`
 
 `augment()` returns observation-level diagnostics like residuals and hat values. 
 
@@ -177,7 +177,7 @@ augment(stopping_model)
 
 ```
 
-### Residual plot
+#### Residual plot
 
 A residual plot compares fitted values and residuals. It is a useful diagnostic to see if there are non-linear patterns that are not captured by the model and to check for constant error variance.
 
@@ -222,7 +222,7 @@ class(diamonds_model1)
 
 -----
 
-### `tidy()`
+#### `tidy()`
 
 `tidy()` returns coefficient-level diagnostics like standard errors and p-values.
 
@@ -231,7 +231,7 @@ tidy(stopping_model)
 
 ```
 
-### Coefficient plot
+#### Coefficient plot
 
 Here's a simple plot of estimated OLS coefficients and their 95% confidence intervals. 
 
@@ -301,9 +301,11 @@ knitr::include_graphics(here::here("chapters", "images", "error-bars.png"))
 
 Here, (a) suffers from within the bar bias, and (a) and (b) suffers from issues with binary interpretation. It's tricky to fully adopt (c) or (d), which are visually symmetric and visually continuous, but I never use bars for coefficients and I never use the "capital I" error bars. 
 
+Note: sometimes (a) is referred to as a [dynamite plot](https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/#:~:text=Dynamite%20plots%20are%20used%20to,regardless%20of%20the%20sample%20size.).
+
 -----
 
-### `glance()`
+#### `glance()`
 
 `glance()` returns model-level diagnostics like $R^2$ and $\hat{\sigma}$. 
 
@@ -314,7 +316,7 @@ glance(stopping_model)
 
 It isn't interesting to visualize one model using `glance()`. However, `glance()` allows for the comparison of many models. 
 
-### Detailed Example: Creating Many models
+#### Detailed Example: Creating Many models
 
 [Hadley Wickham gave a great talk about estimating many models to the The Edinburgh R User Group.](https://www.youtube.com/watch?v=rz3_FDVt9eg) (The relevant sections begins around the 28-minute mark). Here is an example based on his talk:
 
@@ -399,11 +401,11 @@ exercise_number <- exercise_number + 1
 
 -----
 
-# 4. Create Data with `library(modelr)`
+## 4. Create Data with `library(modelr)`
 
 `library(modelr)` has many useful functions for modeling. It works with more types of models than just linear models from `lm()`. 
 
-## `add_predictions()`
+### `add_predictions()`
 
 `add_predictions()` adds predictions to a data set using an estimated model object. 
 
@@ -411,7 +413,7 @@ exercise_number <- exercise_number + 1
 add_predictions(data = diamonds, model = diamonds_model1)
 ```
 
-## `add_residuals()`
+### `add_residuals()`
 
 `add_residuals()` adds residuals to a data set using an estimated model object. 
 
@@ -419,7 +421,7 @@ add_predictions(data = diamonds, model = diamonds_model1)
 add_residuals(data = diamonds, model = diamonds_model1)
 ```
 
-## `data_grid()`
+### `data_grid()`
 
 `data_grid()` creates an evenly-spaced grid of points using the range of observed predictors in a data set. This is useful for visualization and is really, really useful for understanding generalized linear models. `seq_range()` can be used with `data_grid()` to add a finer grid of values.  
 
@@ -454,7 +456,7 @@ Categorical variables are displayed in alphanumeric order by default. Here, we u
 
 -----
 
-## Complex Models and GLMs
+### Complex Models and GLMs
 
 `library(modelr)` is useful for visualizing complex models such as polynomial regression or generalized linear models (GLMs) like logistic regression. 
 
@@ -549,7 +551,7 @@ models <- data_grid(cars, speed = seq_range(speed, 1000)) %>%
 
 :::
 
-# Summary
+## Summary
 
 Hopefully these notes demonstrate the power of using a tool (R) that has powerful modeling tools and powerful visualization tools. There are several approaches to visualizing regression models. 
 

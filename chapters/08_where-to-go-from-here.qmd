@@ -58,8 +58,6 @@ When Googling for R or data science help, set the search range to the last year 
 
 [CRAN task views](https://cran.r-project.org/web/views/) contains thorough introductions to packages and techniques organized by subject matter. The Econometrics, Reproducible Research, and and Social Sciences task views are good starting places.
 
-### Twitter
+### ~~Twitter~~ LinkedIn
 
-Twitter is mostly bad. But the #rstats hashtag and #rstats community are mostly good. They are also generally inclusive and civil. In particular, open sources developers like Hadley Wickham (@hadleywickham) and Jenny Bryan (@JennyBryan) are active.
-
-I am somewhat happy on Twitter at @awunderground and I am always willing to help with issues. 
+Please connect with me on [LinkedIn](https://www.linkedin.com/in/aaronrwilliams100/)!
