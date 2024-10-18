@@ -196,51 +196,51 @@
     "text": "5.5 Summary\nHopefully these notes demonstrate the power of using a tool (R) that has powerful modeling tools and powerful visualization tools. There are several approaches to visualizing regression models.\nWe can model with ggplot2 or use base R to quickly visualize our data. With a little more work, we can use library(broom) and library(modelr) to create tidy data frames and leverage the full power of ggplot2.\n\nCreate models with ggplot2\nUse Base R to Explore lm Objects\nExtract Model Data with broom\nCreate Data with library(modelr)"
   },
   {
-    "objectID": "chapters/06_data-munging.html#import-packages-and-functions",
-    "href": "chapters/06_data-munging.html#import-packages-and-functions",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#import-packages-and-functions",
+    "href": "chapters/06_data-wrangling.html#import-packages-and-functions",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.1 Import Packages and Functions",
     "text": "6.1 Import Packages and Functions\n\nfilter() - drop cases based on logical conditions\nmutate() - add new variables are transform existing variables\npivot_wider() - make data wider\npivot_longer() - make data longer\nseparate() - split a character variable into multiple columns based on a delimiter"
   },
   {
-    "objectID": "chapters/06_data-munging.html#tidy-data",
-    "href": "chapters/06_data-munging.html#tidy-data",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#tidy-data",
+    "href": "chapters/06_data-wrangling.html#tidy-data",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.2 Tidy Data",
     "text": "6.2 Tidy Data\nThis data comes from library(tidyr) and these examples largely come from chapter 12 in R for Data Science by Hadley Wickham and Garrett Grolemund.\n\ntable1, table2, table3, table4a, table4b, and table5 all display the number of TB cases documented by the World Health Organization in Afghanistan, Brazil, and China between 1999 and 2000.\n\nThe following table, table1 is tidy because\n\nEach variable has its own column\nEach observation has its own row\nEach value has its own cell\n\n\ntable1\n\n# A tibble: 6 × 4\n  country      year  cases population\n  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;\n1 Afghanistan  1999    745   19987071\n2 Afghanistan  2000   2666   20595360\n3 Brazil       1999  37737  172006362\n4 Brazil       2000  80488  174504898\n5 China        1999 212258 1272915272\n6 China        2000 213766 1280428583"
   },
   {
-    "objectID": "chapters/06_data-munging.html#untidy-table2",
-    "href": "chapters/06_data-munging.html#untidy-table2",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#untidy-table2",
+    "href": "chapters/06_data-wrangling.html#untidy-table2",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.3 Untidy table2",
     "text": "6.3 Untidy table2\n\nUntidyCleaned\n\n\nWhy aren’t the data tidy?\n\ntable2\n\n# A tibble: 12 × 4\n   country      year type            count\n   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;\n 1 Afghanistan  1999 cases             745\n 2 Afghanistan  1999 population   19987071\n 3 Afghanistan  2000 cases            2666\n 4 Afghanistan  2000 population   20595360\n 5 Brazil       1999 cases           37737\n 6 Brazil       1999 population  172006362\n 7 Brazil       2000 cases           80488\n 8 Brazil       2000 population  174504898\n 9 China        1999 cases          212258\n10 China        1999 population 1272915272\n11 China        2000 cases          213766\n12 China        2000 population 1280428583\n\n\n\n\nEach observation was spread across two rows!\n\ntable2 %&gt;%\n  pivot_wider(names_from = type, values_from = count)\n\n# A tibble: 6 × 4\n  country      year  cases population\n  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;\n1 Afghanistan  1999    745   19987071\n2 Afghanistan  2000   2666   20595360\n3 Brazil       1999  37737  172006362\n4 Brazil       2000  80488  174504898\n5 China        1999 212258 1272915272\n6 China        2000 213766 1280428583"
   },
   {
-    "objectID": "chapters/06_data-munging.html#untidy-table3",
-    "href": "chapters/06_data-munging.html#untidy-table3",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#untidy-table3",
+    "href": "chapters/06_data-wrangling.html#untidy-table3",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.4 Untidy table3",
     "text": "6.4 Untidy table3\n\nUntidyCleaned\n\n\nWhy aren’t the data tidy?\n\ntable3\n\n# A tibble: 6 × 3\n  country      year rate             \n  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            \n1 Afghanistan  1999 745/19987071     \n2 Afghanistan  2000 2666/20595360    \n3 Brazil       1999 37737/172006362  \n4 Brazil       2000 80488/174504898  \n5 China        1999 212258/1272915272\n6 China        2000 213766/1280428583\n\n\n\n\nThe rate column had two variables!\n\ntable3 %&gt;%\n  separate(rate, into = c(\"cases\", \"population\")) %&gt;%\n  mutate(\n    cases = as.numeric(cases),\n    population = as.numeric(population)\n  )\n\n# A tibble: 6 × 4\n  country      year  cases population\n  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;\n1 Afghanistan  1999    745   19987071\n2 Afghanistan  2000   2666   20595360\n3 Brazil       1999  37737  172006362\n4 Brazil       2000  80488  174504898\n5 China        1999 212258 1272915272\n6 China        2000 213766 1280428583"
   },
   {
-    "objectID": "chapters/06_data-munging.html#untidy-table4",
-    "href": "chapters/06_data-munging.html#untidy-table4",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#untidy-table4",
+    "href": "chapters/06_data-wrangling.html#untidy-table4",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.5 Untidy table4",
     "text": "6.5 Untidy table4\n\nUntidyCleaned\n\n\nWhy aren’t the data tidy?\n\ntable4a\n\n# A tibble: 3 × 3\n  country     `1999` `2000`\n  &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;\n1 Afghanistan    745   2666\n2 Brazil       37737  80488\n3 China       212258 213766\n\ntable4b\n\n# A tibble: 3 × 3\n  country         `1999`     `2000`\n  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;\n1 Afghanistan   19987071   20595360\n2 Brazil       172006362  174504898\n3 China       1272915272 1280428583\n\n\n\n\nEach table had variables in the column names and the data were spread across two tables\n\n# fix table4a\ntable4a_fixed &lt;- table4a %&gt;%\n  pivot_longer(\n    cols = c(`1999`, `2000`), \n    names_to = \"year\", \n    values_to = \"cases\"\n  )\n\n# fix table4b\ntable4b_fixed &lt;- table4b %&gt;%\n  pivot_longer(\n    cols = c(`1999`, `2000`), \n    names_to = \"year\", \n    values_to = \"population\"\n  )\n\n# join the two tables into one tidy table\nleft_join(\n  table4a_fixed, \n  table4b_fixed, \n  by = c(\"country\", \"year\")\n)\n\n# A tibble: 6 × 4\n  country     year   cases population\n  &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt;\n1 Afghanistan 1999     745   19987071\n2 Afghanistan 2000    2666   20595360\n3 Brazil      1999   37737  172006362\n4 Brazil      2000   80488  174504898\n5 China       1999  212258 1272915272\n6 China       2000  213766 1280428583"
   },
   {
-    "objectID": "chapters/06_data-munging.html#titanic-data",
-    "href": "chapters/06_data-munging.html#titanic-data",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#titanic-data",
+    "href": "chapters/06_data-wrangling.html#titanic-data",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.6 Titanic Data",
     "text": "6.6 Titanic Data\nConsider the Titanic data set from the 3D plots example.\n\ntribble(\n  ~Class, ~Sex, ~n,\n  \"1st class\", \"female passengers\", 144,\n  \"1st class\", \"male passengers\", 179,\n  \"2nd class\", \"female passengers\", 106,\n  \"2nd class\", \"male passengers\", 171, \n  \"3rd class\", \"female passengers\", 216,\n  \"3rd class\", \"male passengers\", 493\n)\n\n\n\n\n\n\n\nExercise 1\n\n\n\nTidy the following data:\n\ntribble(\n  ~Class, ~female_passengers, ~male_passengers,\n  \"1st class\", 144, 179,\n  \"2nd class\", 106, 171,\n  \"3rd class\", 216, 493\n)\n\n\n\n\n\n\n\n\n\nExercise 2\n\n\n\nTidy the following data:\n\ntribble(\n  ~Class, ~`male passengers/female passengers`,\n  \"1st class\", \"179|144\",\n  \"2nd class\", \"171|106\",\n  \"3rd class\", \"493|216\",\n)\n\n\n\n\n\n\n\n\n\nExercise 3\n\n\n\nSuppose we want to create a column chart with only female passengers. Furthermore, we want n on the x-axis and we want Class on the y-axis with the levels going from 1st to 3rd from top to bottom.\nStep 1: Use filter() to drop male passengers.\nStep 2: Create a column chart with n on the x-axis and Class on the y-axis. Pipe (%&gt;%) the data into ggplot().\nStep 3: After the filter(), add the following:\n  mutate(Class = factor(Class, levels = c(\"3rd class\", \"2nd class\", \"1st class\"))) %&gt;%"
   },
   {
-    "objectID": "chapters/06_data-munging.html#additional-tools",
-    "href": "chapters/06_data-munging.html#additional-tools",
-    "title": "6  Data Munging for Data Visualization",
+    "objectID": "chapters/06_data-wrangling.html#additional-tools",
+    "href": "chapters/06_data-wrangling.html#additional-tools",
+    "title": "6  Data Wrangling for Data Visualization",
     "section": "6.7 Additional tools",
     "text": "6.7 Additional tools\n\nlibrary(stringr) has powerful tools for dealing with text strings.\nlibrary(lubridate) has powerful tools for dealing with time and dates."
   },

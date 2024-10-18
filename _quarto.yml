@@ -17,7 +17,7 @@ book:
       chapters:
         - chapters/04_big-data.qmd
         - chapters/05_linear-regression.qmd
-        - chapters/06_data-munging.qmd
+        - chapters/06_data-wrangling.qmd
         - chapters/07_time-series.qmd
     - part: Additional Resources
       chapters:
