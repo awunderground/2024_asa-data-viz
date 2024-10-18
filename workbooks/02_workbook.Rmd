@@ -41,6 +41,18 @@ Created a scatter plot that shows the relationship between pressure and wind.
 ## Exercise 4
 
 ```{r}
+adequate_sleep <- msleep |>
+  mutate(sleep14 = if_else(
+    condition = sleep_total > 16, 
+    true = "Adequate sleep", 
+    false = "Inadequate sleep")
+  ) |>
+  count(sleep14) |>
+  mutate(prop = n / sum(n))
+
+ggplot(data = adequate_sleep, aes(x = "", y = prop, fill = sleep14)) +
+  geom_col()
+
 # YOUR WORK GOES HERE
 
 ```

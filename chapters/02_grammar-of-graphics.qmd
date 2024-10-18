@@ -388,31 +388,6 @@ recent_storms50 %>%
 
 -----
 
-::: callout
-
-#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
-
-```{r}
-#| echo: false
-
-exercise_number <- exercise_number + 1
-
-```
-
-<font color="#55b748">Step 1:</font> Type the following code in your script. 
-
-```
-data <- tibble(x = 1:10, y = 1:10)
-ggplot(data = data) +
-  geom_blank(mapping = aes(x = x, y = y))
-```
-
-<font color="#55b748">Step 2:</font> Add `coord_polar()` to your plot.
-
-<font color="#55b748">Step 3:</font> Add `labs(title = "Polar coordinate system")` to your plot.
-
-:::
-
 ::: {.callout-tip}
 
 <font color="#ec008b">**5 Coordinate systems**</font> map scaled geometric objects to the position of objects on the plane of a plot. The two most popular coordinate systems are the Cartesian coordinate system and the polar coordinate system.
@@ -436,7 +411,39 @@ tibble(x = 1:100,
 
 ```
 
------
+::: callout
+
+#### [`r paste("Exercise", exercise_number)`]{style="color:#1696d2;"}
+
+```{r}
+#| echo: false
+
+exercise_number <- exercise_number + 1
+
+```
+
+<font color="#55b748">Step 1:</font> Reggee sleeps at least 16 hours per day. Run the follow code to make a stacked bar chart. 
+
+```r
+adequate_sleep <- msleep |>
+  mutate(sleep14 = if_else(
+    sleep_total > 14, 
+    "Adequate sleep", 
+    "Inadequate sleep")
+  ) |>
+  count(sleep14) |>
+  mutate(prop = n / sum(n))
+
+ggplot(data = adequate_sleep, aes(x = "", y = prop, fill = sleep14)) +
+  geom_col()
+
+```
+
+<font color="#55b748">Step 2:</font> Add `coord_polar(theta = "y")` to make a pie chart. 
+
+<font color="#55b748">Step 3:</font> Add `scale_fill_manual(values = c("Adequate sleep" = "green", "Inadequate sleep" = "red"))` to change the colors of the sections. 
+
+:::
 
 ::: callout
 

@@ -77,17 +77,22 @@ storms %>%
 
 ```
 
-
-
 ## Exercise 4
 
 ```{r}
-data <- tibble(x = 1:10, y = 1:10)
+adequate_sleep <- msleep |>
+  mutate(sleep14 = if_else(
+    condition = sleep_total > 16, 
+    true = "Adequate sleep", 
+    false = "Inadequate sleep")
+  ) |>
+  count(sleep14) |>
+  mutate(prop = n / sum(n))
 
-ggplot(data = data) +
-  geom_blank(mapping = aes(x = x, y = y)) +
-  coord_polar() +
-  labs(title = "Polar coordinate system")
+ggplot(data = adequate_sleep, aes(x = "", y = prop, fill = sleep14)) +
+  geom_col() +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = c("Adequate sleep" = "green", "Inadequate sleep" = "red"))
 
 ```
 
